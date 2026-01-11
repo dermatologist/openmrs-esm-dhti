@@ -18,6 +18,18 @@ To start a dev server for a specific microfrontend, run:
 yarn start --sources 'packages/esm-chatbot-agent'
 ```
 
+## Configuring in OpenMRS
+
+REF: https://o3-docs.openmrs.org/docs/configure-o3/overview
+
+Implementers can make changes to frontend module configurations through the built-in implementer tools panel. Once you log into O3, clicking the caret arrow centered at the bottom of the screen will pull up the implementer tools. Alternatively, you can click on the cog icon in the navbar. Once open, you can look up configuration properties by searching through the configuration and modify them on the fly. Note that any tweaks made to the configuration through the implementer tools will be lost once you refresh the page. To make permanent changes to the configuration, you will need to commit those changes to your distro's configuration. The implementer tools allow you to download a temporary config file containing your changes by clicking the Download config button.
+
+Typically, you'll need to make multiple configuration overrides to various frontend modules. The standard approach is to create a JSON configuration file that is accessible via HTTP/HTTPS on your server. You can then point your SPA to this configuration file by specifying its URL in the configUrls array of the SPA build configuration file (spa-build-config.json). Alternatively, you can include frontend configuration in content packages (see "Content package frontend configuration" below).
+
+
+
+## Starting a dev server
+
 This command uses the [openmrs](https://www.npmjs.com/package/openmrs) tooling to fire up a dev server running `esm-patient-chart` as well as the specified microfrontend.
 
 There are two approaches for working on multiple microfrontends simultaneously.

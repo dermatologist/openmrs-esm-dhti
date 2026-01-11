@@ -7,10 +7,10 @@
 import { getAsyncLifecycle, defineConfigSchema } from '@openmrs/esm-framework';
 import { configSchema } from './config-schema';
 
-const moduleName = '@openmrs/esm-chatbot-agent';
+const moduleName = '@openmrs/esm-generic-display';
 
 const options = {
-  featureName: 'chatbot-agent',
+  featureName: 'generic-display',
   moduleName,
 };
 
@@ -33,4 +33,4 @@ export function startupApp() {
 
 
 
-export const conversationContainer = getAsyncLifecycle(() => import('./dhti/conversation.component'), options);
+export const displayComponent = getAsyncLifecycle(() => import('./dhti/display.component'), options);

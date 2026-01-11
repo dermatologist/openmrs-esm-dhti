@@ -50,6 +50,6 @@ export const configSchema = {
 export type Config = {
   casualGreeting: boolean;
   whoToGreet: Array<string>;
-  dhtiRoute: string;
   dhtiTitle: string;
+  dhtiRoute: string;
 };
