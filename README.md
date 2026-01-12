@@ -11,7 +11,8 @@ This repository contains a collection of microfrontends built using the OpenMRS 
 ## Starting with dhti (Example)
 
 ```bash
-dhti-cli conch start -g dermatologist/openmrs-esm-dhti -s packages/esm-chatbot-agent
+dhti-cli conch install -g dermatologist/openmrs-esm-dhti -s packages/esm-chatbot-agent -n esm-chatbot-agent
+dhti-cli conch start -g dermatologist/openmrs-esm-dhti -s packages/esm-chatbot-agent -n esm-chatbot-agent
 
 ```
 

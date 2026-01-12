@@ -33,7 +33,7 @@ export const configSchema = {
   },
   dhtiRoute: {
     _type: Type.String,
-    _default: 'http://localhost:8001/langserve/dhti_elixir_template/cds-services/dhti-service',
+    _default: 'http://localhost:8001/langserve/dhti_elixir_schat/cds-services/dhti-service',
     _description: 'Route for the DHTI Template Service',
   },
   whoToGreet: {

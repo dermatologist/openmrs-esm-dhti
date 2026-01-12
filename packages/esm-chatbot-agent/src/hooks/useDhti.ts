@@ -21,7 +21,7 @@ export const useDhti = (): UseDhtiReturn => {
 
   const submitMessage = async (
     newMessage: string,
-    service: string = 'dhti_elixir_template',
+    service: string = 'dhti_elixir_schat',
     patientId?: string,
   ): Promise<CDSHookCard | null> => {
     setLoading(true);
