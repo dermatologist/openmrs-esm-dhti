@@ -1,4 +1,19 @@
-# OpenMRS ESM Template App
+# OpenMRS ESM [DHTI](https://github.com/dermatologist/dhti)
+
+<p align="center">
+  <img src="https://github.com/dermatologist/dhti/blob/develop/notes/dhti-logo.jpg" />
+</p>
+
+- 🚀 *Healing begins with a single, sacred vibration!*
+
+This repository contains a collection of microfrontends built using the OpenMRS ESM framework for [DHTI](https://github.com/dermatologist/dhti)
+
+## Starting with dhti (Example)
+
+```bash
+dhti-cli conch start -g dermatologist/openmrs-esm-dhti -s packages/esm-chatbot-agent
+
+```
 
 ## Setup
 
@@ -9,14 +24,24 @@ This monorepo uses [yarn](https://yarnpkg.com).
 To install the dependencies, run:
 
 ```bash
+corepack enable
 yarn
 ```
 
-To start a dev server for a specific microfrontend, run:
+To start a dev server for a specific microfrontend, run (example):
 
 ```bash
 yarn start --sources 'packages/esm-chatbot-agent'
 ```
+
+## Available Packages
+
+- [esm-chatbot-agent](packages/esm-chatbot-agent/README.md)
+- [esm-generic-display](packages/esm-generic-display/README.md)
+- [esm-starter-app](packages/esm-starter-app/README.md)
+
+## Give us a star ⭐️
+If you find this project useful, give us a star. It helps others discover the project.
 
 ## Configuring in OpenMRS
 
@@ -196,3 +221,11 @@ Please see the [Implementer Documentation](https://wiki.openmrs.org/pages/viewpa
 ## Deployment
 
 See [Creating a Distribution](https://openmrs.atlassian.net/wiki/x/xoIBCQ) for information about adding microfrontends to a distribution.
+
+## Contributing
+
+Please see the [Contributing Guide](CONTRIBUTING.md) for information about contributing to this project. WIP
+
+## Contributors
+
+* [Bell Eapen](https://nuchange.ca) ([UIS](https://www.uis.edu/directory/bell-punneliparambil-eapen)) |  [Contact](https://nuchange.ca/contact) | [![Twitter Follow](https://img.shields.io/twitter/follow/beapen?style=social)](https://twitter.com/beapen)
