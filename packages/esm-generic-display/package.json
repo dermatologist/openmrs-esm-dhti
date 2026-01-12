@@ -41,7 +41,8 @@
   },
   "dependencies": {
     "@carbon/react": "^1.83.0",
-    "lodash-es": "^4.17.21"
+    "lodash-es": "^4.17.21",
+    "axios": "^1.13"
   },
   "peerDependencies": {
     "@openmrs/esm-framework": "*",
