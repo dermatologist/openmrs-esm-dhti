@@ -1,11 +1,11 @@
 {
-  "name": "@openmrs/esm-dhti",
+  "name": "@openmrs/esm-template-app",
   "version": "4.0.0",
   "license": "MPL-2.0",
   "description": "An OpenMRS seed application for building microfrontends",
-  "workspaces": [
-    "packages/*"
-  ],
+  "browser": "dist/openmrs-esm-template-app.js",
+  "main": "src/index.ts",
+  "source": true,
   "scripts": {
     "start": "openmrs develop",
     "serve": "webpack serve --mode=development",

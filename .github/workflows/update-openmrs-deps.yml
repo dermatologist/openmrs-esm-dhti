@@ -5,9 +5,7 @@ name: 'Check for OpenMRS Dependency Updates'
 
 on:
   workflow_dispatch:
-  schedule:
-    # Runs every hour at minute 30
-    - cron: '30 * * * *'
+
 
 jobs:
   check-for-updates:

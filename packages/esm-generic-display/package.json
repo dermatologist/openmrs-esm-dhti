@@ -1,11 +1,11 @@
 {
-  "name": "@openmrs/esm-dhti",
+  "name": "@openmrs/esm-dhti-display",
   "version": "4.0.0",
   "license": "MPL-2.0",
   "description": "An OpenMRS seed application for building microfrontends",
-  "workspaces": [
-    "packages/*"
-  ],
+  "browser": "dist/openmrs-esm-dhti-display.js",
+  "main": "src/index.ts",
+  "source": true,
   "scripts": {
     "start": "openmrs develop",
     "serve": "webpack serve --mode=development",
@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "@carbon/react": "^1.83.0",
+    "axios": "^1.13",
     "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
