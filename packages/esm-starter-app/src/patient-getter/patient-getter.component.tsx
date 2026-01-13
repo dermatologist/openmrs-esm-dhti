@@ -12,7 +12,7 @@
 import React, { useState } from 'react';
 import { Button, InlineLoading, Tile } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
-import { usePatient } from './patient-getter.resource';
+import { usePatient } from '@openmrs/esm-dhti-utils';
 import styles from './patient-getter.scss';
 
 function PatientGetter() {

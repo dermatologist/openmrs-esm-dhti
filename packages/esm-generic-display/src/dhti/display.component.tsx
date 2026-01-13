@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useConfig, openmrsFetch, fhirBaseUrl } from '@openmrs/esm-framework';
+import { useConfig } from '@openmrs/esm-framework';
 import useSWR from 'swr';
 import styles from './display.scss';
-import { useDhti } from '../hooks/useDhti';
+import { useDhti } from '@openmrs/esm-dhti-utils';
 
 interface DisplayWidgetProps {
     patientUuid: string;
