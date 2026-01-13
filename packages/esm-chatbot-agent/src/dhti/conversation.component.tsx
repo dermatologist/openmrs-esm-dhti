@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useConfig } from '@openmrs/esm-framework';
-import { ConversationDisplay, Message } from './ConversationDisplay';
+import { useDhti } from '@openmrs/esm-dhti-utils';
+import type { Message } from './ConversationDisplay';
+import { ConversationDisplay } from './ConversationDisplay';
 import { MessageInput } from './MessageInput';
-import { useDhti } from '../hooks/useDhti';
 
 interface ConversationComponentProps {
     patientUuid: string;

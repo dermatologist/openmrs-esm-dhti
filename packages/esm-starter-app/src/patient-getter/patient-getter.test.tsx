@@ -4,9 +4,14 @@ import userEvent from '@testing-library/user-event';
 import PatientGetter from './patient-getter.component';
 
 /**
- * This is an idiomatic mock of a backend resource. We generally mock resource fetching functions like `usePatient`, rather than mocking `fetch` or anything lower-level.
+ * This is an idiomatic mock of a backend resource. We generally mock resource fetching functions like `usePatient`, 
+ * rather than mocking `fetch` or anything lower-level.
+ * 
+ * Note: The hook is now from the shared utilities package (@openmrs/esm-dhti-utils), which demonstrates
+ * the benefit of having a single, well-tested implementation that can be reused across multiple packages.
+ * This reduces duplication and ensures consistency in how patient data is fetched throughout the application.
  */
-jest.mock('./patient-getter.resource.ts', () => ({
+jest.mock('@openmrs/esm-dhti-utils', () => ({
   usePatient: jest.fn(() => ({
     patient: {
       birthDate: '1997-05-21',

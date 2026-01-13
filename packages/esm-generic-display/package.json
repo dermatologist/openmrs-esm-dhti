@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "@carbon/react": "^1.83.0",
+    "@openmrs/esm-dhti-utils": "workspace:*",
     "axios": "^1.13",
     "lodash-es": "^4.17.21"
   },
