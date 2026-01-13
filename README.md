@@ -37,9 +37,44 @@ yarn start --sources 'packages/esm-chatbot-agent'
 
 ## Available Packages
 
-- [esm-chatbot-agent](packages/esm-chatbot-agent/README.md)
-- [esm-generic-display](packages/esm-generic-display/README.md)
-- [esm-starter-app](packages/esm-starter-app/README.md)
+This monorepo contains the following packages:
+
+### Frontend Modules
+
+- **[esm-chatbot-agent](packages/esm-chatbot-agent/README.md)** - Conversational AI interface for patient interactions
+- **[esm-generic-display](packages/esm-generic-display/README.md)** - Generic display widget for AI-powered insights
+- **[esm-starter-app](packages/esm-starter-app/README.md)** - Template application demonstrating OpenMRS ESM best practices
+
+### Shared Libraries
+
+- **[esm-dhti-utils](packages/esm-dhti-utils/README.md)** - Shared utilities, hooks, and models used across DHTI packages
+
+## Architecture
+
+The monorepo is structured to reduce code duplication and promote code reuse:
+
+```
+openmrs-esm-dhti/
+├── packages/
+│   ├── esm-chatbot-agent/      # Conversational AI module
+│   ├── esm-generic-display/    # Display widget module
+│   ├── esm-starter-app/        # Template/starter module
+│   └── esm-dhti-utils/         # Shared utilities (NEW)
+│       ├── hooks/              # Reusable React hooks
+│       │   ├── usePatient.ts   # Patient search hook
+│       │   └── useDhti.ts      # DHTI service integration hook
+│       └── models/             # TypeScript models
+│           ├── card.ts         # CDS Hooks Card model
+│           └── request.ts      # CDS Hooks Request model
+└── ...
+```
+
+### Shared Utilities
+
+The `esm-dhti-utils` package provides:
+- **usePatient**: Hook for searching patients via FHIR API (supports name and identifier search)
+- **useDhti**: Hook for interacting with DHTI CDS Hooks services
+- **CDSHookCard/CDSHookRequest**: TypeScript models for CDS Hooks integration
 
 ## Give us a star ⭐️
 If you find this project useful, give us a star. It helps others discover the project.

@@ -1,5 +1,5 @@
 import React from 'react';
-import { CDSHookCard } from '../models/card';
+import type { CDSHookCard } from '@openmrs/esm-dhti-utils';
 
 export interface Message {
   type: 'user' | 'system';

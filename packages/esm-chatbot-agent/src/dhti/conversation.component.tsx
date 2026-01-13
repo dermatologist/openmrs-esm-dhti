@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useConfig } from '@openmrs/esm-framework';
 import { useDhti } from '@openmrs/esm-dhti-utils';
-import { ConversationDisplay, Message } from './ConversationDisplay';
+import type { Message } from './ConversationDisplay';
+import { ConversationDisplay } from './ConversationDisplay';
 import { MessageInput } from './MessageInput';
 
 interface ConversationComponentProps {

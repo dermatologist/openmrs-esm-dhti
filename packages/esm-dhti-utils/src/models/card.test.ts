@@ -1,4 +1,4 @@
-import { CDSHookCard, CDSHookCardSource, CDSHookCardLink, CDSHookCardIndicator } from './card';
+import { CDSHookCard, CDSHookCardSource, CDSHookCardLink, type CDSHookCardIndicator } from './card';
 
 describe('CDSHookCardSource', () => {
   it('should create instance with all properties', () => {
