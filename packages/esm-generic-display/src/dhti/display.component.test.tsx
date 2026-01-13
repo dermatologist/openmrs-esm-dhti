@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { useConfig } from '@openmrs/esm-framework';
+import { useDhti } from '@openmrs/esm-dhti-utils';
 import DisplayWidget from './display.component';
 
 // Mock dependencies
@@ -9,11 +10,7 @@ jest.mock('@openmrs/esm-framework', () => ({
 }));
 
 jest.mock('@openmrs/esm-dhti-utils', () => ({
-  useDhti: jest.fn(() => ({
-    submitMessage: jest.fn().mockResolvedValue({ summary: 'AI analysis result' }),
-    loading: false,
-    error: null,
-  })),
+  useDhti: jest.fn(),
 }));
 
 jest.mock('swr', () => ({
@@ -26,6 +23,7 @@ jest.mock('swr', () => ({
 }));
 
 const mockUseConfig = useConfig as jest.MockedFunction<typeof useConfig>;
+const mockUseDhti = useDhti as jest.MockedFunction<typeof useDhti>;
 
 describe('DisplayWidget', () => {
   const defaultConfig = {
@@ -36,6 +34,11 @@ describe('DisplayWidget', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseConfig.mockReturnValue(defaultConfig);
+    mockUseDhti.mockReturnValue({
+      submitMessage: jest.fn().mockResolvedValue({ summary: 'AI analysis result' }),
+      loading: false,
+      error: null,
+    });
   });
 
   it('should render display widget', () => {
@@ -52,8 +55,7 @@ describe('DisplayWidget', () => {
   });
 
   it('should show loading state', () => {
-    const { useDhti } = require('@openmrs/esm-dhti-utils');
-    useDhti.mockReturnValue({
+    mockUseDhti.mockReturnValue({
       submitMessage: jest.fn(),
       loading: true,
       error: null,
@@ -65,8 +67,7 @@ describe('DisplayWidget', () => {
   });
 
   it('should show error state', () => {
-    const { useDhti } = require('@openmrs/esm-dhti-utils');
-    useDhti.mockReturnValue({
+    mockUseDhti.mockReturnValue({
       submitMessage: jest.fn(),
       loading: false,
       error: 'Failed to load',

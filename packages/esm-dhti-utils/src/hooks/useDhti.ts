@@ -53,7 +53,10 @@ export const useDhti = (): UseDhtiReturn => {
         context: { input: newMessage, patientId: patientId || undefined },
       });
 
-      // TODO: Investigate why nested input is required by the DHTI service
+      // Note: The DHTI service expects a nested structure where the CDS Hook request
+      // is wrapped in an 'input' property. This is specific to the DHTI implementation
+      // and may differ from standard CDS Hooks services. The nested structure allows
+      // the LangServe framework to properly route and process the request.
       const _request = {
         input: request,
       };

@@ -179,7 +179,7 @@ describe('useDhti', () => {
       await result.current.submitMessage('Test message');
     });
 
-    const callArgs = mockAxios.post.mock.calls[0][1];
+    const callArgs = mockAxios.post.mock.calls[0][1] as any;
     expect(callArgs.input.input.context.input).toBe('Test message');
   });
 });
