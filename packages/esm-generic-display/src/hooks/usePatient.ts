@@ -3,7 +3,7 @@ import { fhirBaseUrl, openmrsFetch } from '@openmrs/esm-framework';
 
 /**
  * This hook searches for a patient using the provided search term from the
- * OpenMRS FHIR API. It leverages the useSWR hook from the SWR library
+ * OpenMRS FHIR API.It leverages the useSWR hook from the SWR library
  * https://swr.vercel.app/docs/data-fetching to fetch data. SWR provides a
  * number of benefits over the standard React useEffect hook, including:
  *
@@ -33,28 +33,15 @@ export function usePatient(query: string) {
       url = `${fhirBaseUrl}/Patient?name=${encodeURIComponent(query.trim())}&_summary=data`;
     }
   }
-  const { data, error, isLoading } = useSWR<any, Error>(url, openmrsFetch);
-
-  let patient = null;
-  // * Use the code below to handle direct ID searches, if needed in future
-  // --- IGNORE ---
-  // if (isId) {
-  //   // FHIR /Patient/{id} returns the patient directly
-  //   if (data && data.resourceType === 'Patient') {
-  //     patient = data;
-  //   }
-  // } else {
-  //   if (data && data.data && Array.isArray(data.data.entry) && data.data.entry.length > 0) {
-  //     patient = data.data.entry[0].resource;
-  //   }
-  // }
-
-  if (data && data.data && Array.isArray(data.data.entry) && data.data.entry.length > 0) {
-    patient = data.data.entry[0].resource;
-  }
+  const { data, error, isLoading } = useSWR<
+    {
+      data: { entry: Array<{ resource: fhir.Patient }> };
+    },
+    Error
+  >(query ? url : null, openmrsFetch);
 
   return {
-    patient,
+    patient: data && Array.isArray(data.data?.entry) && data.data.entry.length > 0 ? data.data.entry[0].resource : null,
     error: error,
     isLoading,
   };
