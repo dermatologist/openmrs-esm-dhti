@@ -4,7 +4,7 @@ OpenMRS ESM Chatbot Agent - A conversational AI interface for patient interactio
 
 ## Overview
 
-This package provides a conversational interface that integrates with DHTI (Digital Health Technology for India) services via CDS Hooks. It enables healthcare providers to interact with AI-powered clinical decision support in a chat-like interface.
+This package provides a conversational interface that integrates with DHTI (Digital Health Transformation Initiative) services via CDS Hooks. It enables healthcare providers to interact with AI-powered clinical decision support in a chat-like interface.
 
 ## Features
 

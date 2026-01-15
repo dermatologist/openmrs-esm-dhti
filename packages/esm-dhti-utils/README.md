@@ -1,6 +1,6 @@
 # @openmrs/esm-dhti-utils
 
-Shared utilities for OpenMRS DHTI (Digital Health Technology for India) microfrontends.
+Shared utilities for OpenMRS DHTI (Digital Health Transformation Initiative) microfrontends.
 
 ## Overview
 
@@ -20,11 +20,11 @@ import { usePatient } from '@openmrs/esm-dhti-utils';
 
 function PatientSearch() {
   const { patient, error, isLoading } = usePatient('John Doe');
-  
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
   if (patient) return <div>Found: {patient.name?.[0]?.text}</div>;
-  
+
   return null;
 }
 ```
@@ -39,14 +39,14 @@ import { useDhti } from '@openmrs/esm-dhti-utils';
 
 function DhtiComponent() {
   const { submitMessage, loading, error } = useDhti();
-  
+
   const handleSubmit = async () => {
     const result = await submitMessage('Patient symptoms', 'dhti_service', 'patient-123');
     if (result) {
       console.log('Response:', result.summary);
     }
   };
-  
+
   return <button onClick={handleSubmit} disabled={loading}>Submit</button>;
 }
 ```

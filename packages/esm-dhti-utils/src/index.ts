@@ -1,9 +1,9 @@
 /**
  * @openmrs/esm-dhti-utils
- * 
- * Shared utilities for OpenMRS DHTI (Digital Health Technology for India) microfrontends.
+ *
+ * Shared utilities for OpenMRS DHTI (Digital Health Transformation Initiative) microfrontends.
  * This package provides common hooks, models, and utilities used across DHTI applications.
- * 
+ *
  * @packageDocumentation
  */
 

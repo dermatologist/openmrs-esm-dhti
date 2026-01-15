@@ -2,7 +2,7 @@
 
 ## Repository Overview
 
-This is the **openmrs-esm-dhti** monorepo, a collection of OpenMRS 3.0 (O3) microfrontends built for DHTI (Digital Health Technology for India). The repository follows OpenMRS ESM (Enterprise Service Module) conventions and uses a modern monorepo structure.
+This is the **openmrs-esm-dhti** monorepo, a collection of OpenMRS 3.0 (O3) microfrontends built for DHTI (Digital Health Transformation Initiative). The repository follows OpenMRS ESM (Enterprise Service Module) conventions and uses a modern monorepo structure.
 
 ## Quick Start
 
@@ -167,7 +167,7 @@ This repo integrates with CDS Hooks services for clinical decision support:
 ```typescript
 const request = new CDSHookRequest({
   hook: 'patient-view',
-  context: { 
+  context: {
     patientId: 'patient-123',
     input: 'User message'
   },

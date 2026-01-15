@@ -11,22 +11,22 @@ interface UseDhtiReturn {
 }
 
 /**
- * Custom hook to handle DHTI (Digital Health Technology for India) service submissions.
+ * Custom hook to handle DHTI (Digital Health Transformation Initiative) service submissions.
  * This hook manages the state for submitting messages to a DHTI CDS Hooks service
  * and handles the response processing.
- * 
+ *
  * The hook expects a configuration with a `dhtiRoute` property that specifies
  * the endpoint URL for the DHTI service.
- * 
+ *
  * @returns An object containing:
  *  - submitMessage: Function to submit a message to the DHTI service
  *  - loading: Boolean indicating if a request is in progress
  *  - error: Error message string or null
- * 
+ *
  * @example
  * ```tsx
  * const { submitMessage, loading, error } = useDhti();
- * 
+ *
  * const handleSubmit = async () => {
  *   const result = await submitMessage('Patient symptoms', 'dhti_service', 'patient-123');
  *   if (result) {
