@@ -6,7 +6,7 @@
   },
   "extensions": [
     {
-      "name": "upload-file-widget",
+      "name": "upload-widget",
       "component": "uploadFileWidget",
       "slot": "patient-chart-summary-dashboard-slot"
     }

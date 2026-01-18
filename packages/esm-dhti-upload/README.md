@@ -18,7 +18,7 @@ The widget can be configured through the OpenMRS configuration system:
 
 ```json
 {
-  "@openmrs/esm-dhti-upload-file": {
+  "@openmrs/esm-dhti-upload": {
     "dhtiRoute": "http://localhost:8001/langserve/dhti_elixir_upload_file/cds-services/dhti-service"
   }
 }
@@ -77,14 +77,14 @@ yarn build
 
 ```bash
 cd workspace/openmrs-esm-dhti
-yarn test esm-dhti-upload-file
+yarn test esm-dhti-upload
 ```
 
 ### Local Development
 
 ```bash
 cd workspace/openmrs-esm-dhti
-yarn start --sources packages/esm-dhti-upload-file
+yarn start --sources packages/esm-dhti-upload
 ```
 
 ## Backend Integration

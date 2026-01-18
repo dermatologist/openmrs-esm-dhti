@@ -2,7 +2,7 @@
 
 ## What is this?
 
-The upload-file conch is a microfrontend widget that allows users to upload files from a patient's chart to the DHTI backend for processing.
+The upload conch is a microfrontend widget that allows users to upload files from a patient's chart to the DHTI backend for processing.
 
 ## Location in Patient Chart
 
@@ -34,13 +34,13 @@ The widget appears in the **Patient Chart Summary Tab** alongside other summary 
 The widget can be configured through the OpenMRS implementer tools:
 
 1. Open the Implementer Tools (spanner icon in navbar)
-2. Search for "upload-file" in the configuration search
+2. Search for "upload" in the configuration search
 3. Modify the `dhtiRoute` property to point to your DHTI service endpoint
 
 Default configuration:
 ```json
 {
-  "@openmrs/esm-dhti-upload-file": {
+  "@openmrs/esm-dhti-upload": {
     "dhtiRoute": "http://localhost:8001/langserve/dhti_elixir_upload_file/cds-services/dhti-service"
   }
 }
@@ -81,22 +81,22 @@ The DHTI `upload_file` elixir service must be running and accessible. The servic
 
 ```bash
 cd workspace/openmrs-esm-dhti
-yarn start --sources packages/esm-dhti-upload-file
+yarn start --sources packages/esm-dhti-upload
 ```
 
-This will start the development server with the upload-file widget.
+This will start the development server with the upload widget.
 
 ### Building
 
 ```bash
-cd workspace/openmrs-esm-dhti/packages/esm-dhti-upload-file
+cd workspace/openmrs-esm-dhti/packages/esm-dhti-upload
 yarn build
 ```
 
 ### Testing
 
 ```bash
-cd workspace/openmrs-esm-dhti/packages/esm-dhti-upload-file
+cd workspace/openmrs-esm-dhti/packages/esm-dhti-upload
 yarn test
 ```
 
@@ -142,4 +142,4 @@ Future versions may add:
 For issues or questions:
 - Check the [DHTI GitHub repository](https://github.com/dermatologist/dhti)
 - Review the README.md in the package directory
-- Consult the implementation plan in `notes/upload-file-plan.md`
+- Consult the implementation plan in `notes/upload-plan.md`

@@ -7,10 +7,10 @@
 import { getAsyncLifecycle, defineConfigSchema } from '@openmrs/esm-framework';
 import { configSchema } from './config-schema';
 
-const moduleName = '@openmrs/esm-dhti-upload-file';
+const moduleName = '@openmrs/esm-dhti-upload';
 
 const options = {
-  featureName: 'dhti-upload-file',
+  featureName: 'dhti-upload',
   moduleName,
 };
 

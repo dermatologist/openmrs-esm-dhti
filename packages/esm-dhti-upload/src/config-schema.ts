@@ -1,7 +1,7 @@
 import { Type } from '@openmrs/esm-framework';
 
 /**
- * This is the config schema for the upload-file widget.
+ * This is the config schema for the upload widget.
  * It expects a configuration object which looks like this:
  *
  * ```json

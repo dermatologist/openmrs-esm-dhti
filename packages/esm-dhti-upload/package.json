@@ -1,9 +1,9 @@
 {
-  "name": "@openmrs/esm-dhti-upload-file",
+  "name": "@openmrs/esm-dhti-upload",
   "version": "4.0.0",
   "license": "MPL-2.0",
   "description": "OpenMRS ESM upload file widget for DHTI",
-  "browser": "dist/openmrs-esm-dhti-upload-file.js",
+  "browser": "dist/openmrs-esm-dhti-upload.js",
   "main": "src/index.ts",
   "source": true,
   "scripts": {
