@@ -40,7 +40,7 @@ The widget can be configured through the OpenMRS implementer tools:
 Default configuration:
 ```json
 {
-  "@openmrs/esm-upload-file": {
+  "@openmrs/esm-dhti-upload-file": {
     "dhtiRoute": "http://localhost:8001/langserve/dhti_elixir_upload_file/cds-services/dhti-service"
   }
 }

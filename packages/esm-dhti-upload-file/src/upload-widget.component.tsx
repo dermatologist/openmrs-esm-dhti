@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { usePatient } from '@openmrs/esm-framework';
-import { useDhti } from '@openmrs/esm-dhti-utils';
+import { useConfig, openmrsFetch } from '@openmrs/esm-framework';
+import type { Config } from './config-schema';
 import { Button, InlineLoading, ToastNotification } from '@carbon/react';
 import { Upload } from '@carbon/react/icons';
 import styles from './upload-widget.scss';
@@ -13,20 +13,20 @@ interface UploadFileWidgetProps {
  * Upload File Widget Component
  *
  * This component provides a file upload interface for the patient chart summary tab.
- * It uses the DHTI upload_file elixir service to process and upload files.
+ * It sends files directly to the DHTI backend for processing.
  *
  * Features:
  * - File selection button
  * - Upload progress indicator
  * - Success/failure feedback
- * - Patient context awareness
+ * - Direct file transmission to backend
  */
 const UploadFileWidget: React.FC<UploadFileWidgetProps> = ({ patientUuid }) => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [uploadStatus, setUploadStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [statusMessage, setStatusMessage] = useState<string>('');
-    const { submitMessage, loading, error } = useDhti();
-    const patient = usePatient(patientUuid);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const config = useConfig<Config>();
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -44,51 +44,53 @@ const UploadFileWidget: React.FC<UploadFileWidgetProps> = ({ patientUuid }) => {
             return;
         }
 
+        setIsLoading(true);
         try {
-            // Read file content as base64
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-                const fileContent = e.target?.result;
+            // Read file as ArrayBuffer
+            const arrayBuffer = await selectedFile.arrayBuffer();
 
-                // Create a message with file information
-                const fileData = {
-                    fileName: selectedFile.name,
-                    fileType: selectedFile.type,
-                    fileSize: selectedFile.size,
-                    fileContent: fileContent,
-                };
+            // Convert ArrayBuffer to base64 string
+            const uint8Array = new Uint8Array(arrayBuffer);
+            let binaryString = '';
+            for (let i = 0; i < uint8Array.length; i++) {
+                binaryString += String.fromCharCode(uint8Array[i]);
+            }
+            const base64Content = btoa(binaryString);
 
-                const message = JSON.stringify(fileData);
+            // Build query parameters for metadata
+            const queryParams = new URLSearchParams();
+            queryParams.append('fileName', selectedFile.name);
+            queryParams.append('fileType', selectedFile.type);
+            if (patientUuid) {
+                queryParams.append('patientUuid', patientUuid);
+            }
 
-                // Submit to DHTI service
-                const result = await submitMessage(
-                    message,
-                    'upload_file',
-                    patientUuid
-                );
+            // const uploadUrl = `${config.dhtiRoute}?${queryParams.toString()}`;
+            const uploadUrl = config.dhtiRoute;
 
-                if (result) {
-                    setUploadStatus('success');
-                    setStatusMessage(result.summary || 'File uploaded successfully!');
-                } else if (error) {
-                    setUploadStatus('error');
-                    setStatusMessage(error);
-                } else {
-                    setUploadStatus('error');
-                    setStatusMessage('Upload failed. No response from server.');
-                }
-            };
+            // Send base64-encoded content as JSON { file: ... }
+            const response = await openmrsFetch(uploadUrl, {
+                method: 'POST',
+                body: JSON.stringify({ input: { file: base64Content }, config: {} }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
 
-            reader.onerror = () => {
+            if (response.ok && response.data) {
+                const responseData = response.data as { message?: string; summary?: string };
+                setUploadStatus('success');
+                setStatusMessage(responseData.message || responseData.summary || 'File uploaded successfully!');
+            } else {
                 setUploadStatus('error');
-                setStatusMessage('Failed to read file.');
-            };
-
-            reader.readAsDataURL(selectedFile);
+                setStatusMessage('Upload failed. Please try again.');
+            }
         } catch (err) {
             setUploadStatus('error');
             setStatusMessage('An error occurred during upload.');
             console.error('Upload error:', err);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -102,7 +104,7 @@ const UploadFileWidget: React.FC<UploadFileWidgetProps> = ({ patientUuid }) => {
                         type="file"
                         id="file-upload"
                         onChange={handleFileChange}
-                        disabled={loading}
+                        disabled={isLoading}
                         className={styles.hiddenInput}
                     />
                     <label htmlFor="file-upload" className={styles.fileLabel}>
@@ -110,7 +112,7 @@ const UploadFileWidget: React.FC<UploadFileWidgetProps> = ({ patientUuid }) => {
                             kind="tertiary"
                             size="md"
                             renderIcon={Upload}
-                            disabled={loading}
+                            disabled={isLoading}
                             onClick={(e) => {
                                 e.preventDefault();
                                 document.getElementById('file-upload')?.click();
@@ -125,14 +127,14 @@ const UploadFileWidget: React.FC<UploadFileWidgetProps> = ({ patientUuid }) => {
                     kind="primary"
                     size="md"
                     onClick={handleUpload}
-                    disabled={!selectedFile || loading}
+                    disabled={!selectedFile || isLoading}
                     className={styles.uploadButton}
                 >
-                    {loading ? 'Uploading...' : 'Upload File'}
+                    {isLoading ? 'Uploading...' : 'Upload File'}
                 </Button>
             </div>
 
-            {loading && (
+            {isLoading && (
                 <div className={styles.loadingContainer}>
                     <InlineLoading description="Uploading file..." />
                 </div>
