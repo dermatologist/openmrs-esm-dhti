@@ -71,7 +71,7 @@ const UploadFileWidget: React.FC<UploadFileWidgetProps> = ({ patientUuid }) => {
             // Send base64-encoded content as JSON { file: ... }
             const response = await openmrsFetch(uploadUrl, {
                 method: 'POST',
-                body: JSON.stringify({ input: { file: base64Content }, config: {} }),
+                body: JSON.stringify({ input: { input: base64Content, patientId: patientUuid }, config: {} }),
                 headers: {
                     'Content-Type': 'application/json',
                 },
