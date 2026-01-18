@@ -1,0 +1,43 @@
+.uploadWidget {
+  padding: 1rem;
+  background-color: var(--cds-ui-01);
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.title {
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: var(--cds-text-01);
+}
+
+.uploadContainer {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.fileInput {
+  flex: 1;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.fileLabel {
+  display: inline-block;
+  width: 100%;
+}
+
+.uploadButton {
+  flex-shrink: 0;
+}
+
+.loadingContainer {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background-color: var(--cds-ui-02);
+  border-radius: 0.25rem;
+}

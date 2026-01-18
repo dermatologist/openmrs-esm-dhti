@@ -1,0 +1,13 @@
+{
+  "uploadFile": "Upload File",
+  "chooseFile": "Choose File",
+  "uploadButton": "Upload File",
+  "uploading": "Uploading...",
+  "uploadSuccessful": "Upload Successful",
+  "uploadFailed": "Upload Failed",
+  "fileUploadedSuccessfully": "File uploaded successfully!",
+  "noFileSelected": "Please select a file to upload.",
+  "uploadError": "An error occurred during upload.",
+  "fileReadError": "Failed to read file.",
+  "noServerResponse": "Upload failed. No response from server."
+}
