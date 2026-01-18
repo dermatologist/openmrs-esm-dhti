@@ -23,7 +23,7 @@ import { Type } from '@openmrs/esm-framework';
 export const configSchema = {
   dhtiRoute: {
     _type: Type.String,
-    _default: 'http://localhost:8001/langserve/dhti_elixir_upload/cds-services/dhti-service',
+    _default: 'http://localhost:8001/langserve/dhti_elixir_upload/invoke', //Call invoke directly
     _description: 'The URL of the DHTI upload_file elixir service endpoint.',
   },
 };
