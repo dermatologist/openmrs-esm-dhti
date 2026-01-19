@@ -17,5 +17,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: yarn install
-      - run: yarn test
+      - name: Install dependencies and run tests
+        env:
+          YARN_ENABLE_HARDENED_MODE: 0
+        run: yarn install
+      - name: Run tests
+        run: yarn test
