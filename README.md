@@ -44,6 +44,7 @@ This monorepo contains the following packages:
 - **[esm-chatbot-agent](packages/esm-chatbot-agent/README.md)** - Conversational AI interface for patient interactions
 - **[esm-generic-display](packages/esm-generic-display/README.md)** - Generic display widget for AI-powered insights
 - **[esm-starter-app](packages/esm-starter-app/README.md)** - Template application demonstrating OpenMRS ESM best practices
+- **[esm-dhti-upload](packages/esm-dhti-upload/README.md)** - Module for uploading files for RAG.
 
 ### Shared Libraries
 
