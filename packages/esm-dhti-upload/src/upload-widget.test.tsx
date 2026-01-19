@@ -130,8 +130,10 @@ describe('UploadFileWidget', () => {
             expect(openmrsFetch).toHaveBeenCalled();
             const callArgs = (openmrsFetch as jest.Mock).mock.calls[0];
             const body = JSON.parse(callArgs[1].body);
-            expect(body.input).toHaveProperty('file');
-            expect(typeof body.input.file).toBe('string');
+            // The body should have the structure: { input: { input: base64Content, patientId }, config: {} }
+            expect(body).toHaveProperty('input');
+            expect(body.input).toHaveProperty('input');
+            expect(typeof body.input.input).toBe('string');
             expect(callArgs[1].headers['Content-Type']).toBe('application/json');
         });
     });
