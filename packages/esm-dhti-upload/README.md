@@ -89,16 +89,17 @@ yarn start --sources packages/esm-dhti-upload
 
 ## Backend Integration
 
-The widget communicates with the DHTI `upload_file` elixir service. The service expects:
+The widget communicates with the DHTI `upload_file` elixir service. The service expects the following request body:
 
 ### Request Format
 
 ```json
 {
-  "fileName": "example.pdf",
-  "fileType": "application/pdf",
-  "fileSize": 12345,
-  "fileContent": "base64-encoded-content"
+  "input": {
+    "input": "base64-encoded-file-content",
+    "patientId": "patient-uuid"
+  },
+  "config": {}
 }
 ```
 
