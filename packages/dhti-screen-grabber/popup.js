@@ -124,18 +124,24 @@ async function capturePageContent() {
           return;
         }
         
-        // Convert HTML to Markdown using Turndown
-        try {
-          const turndownService = new TurndownService({
-            headingStyle: 'atx',
-            codeBlockStyle: 'fenced',
-            emDelimiter: '*'
-          });
-          
-          const markdown = turndownService.turndown(response.content);
-          resolve(markdown);
-        } catch (error) {
-          // If Turndown fails, just use the plain text
+        // If we have HTML content, convert it to Markdown using Turndown
+        if (response.htmlContent) {
+          try {
+            const turndownService = new TurndownService({
+              headingStyle: 'atx',
+              codeBlockStyle: 'fenced',
+              emDelimiter: '*'
+            });
+            
+            const markdown = turndownService.turndown(response.htmlContent);
+            resolve(markdown);
+          } catch (error) {
+            // If Turndown fails, use the plain text content
+            console.warn('Turndown conversion failed:', error);
+            resolve(response.content);
+          }
+        } else {
+          // For selected text, just return as-is
           resolve(response.content);
         }
       });
