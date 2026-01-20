@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DHTI Screen Grabber - Options</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #f5f5f5;
+    }
+    
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+    }
+    
+    .option-group {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .option-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-weight: 500;
+    }
+    
+    .option-group input[type="text"],
+    .option-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    
+    .option-group input[type="checkbox"] {
+      margin-right: 8px;
+    }
+    
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .save-button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+    
+    .save-button:hover {
+      background-color: #45a049;
+    }
+    
+    .status-message {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 4px;
+      display: none;
+    }
+    
+    .status-message.success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .help-text {
+      font-size: 12px;
+      color: #777;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>DHTI Screen Grabber Settings</h1>
+  
+  <div class="option-group">
+    <label for="serverUrl">DHTI Server URL</label>
+    <input type="text" id="serverUrl" placeholder="http://localhost:8001/langserve/dhti_elixir_summary/cds-services/dhti-service">
+    <div class="help-text">Enter the URL of your DHTI server endpoint</div>
+  </div>
+  
+  <div class="option-group">
+    <label class="checkbox-label">
+      <input type="checkbox" id="sendPageData">
+      <span>Send page content to server</span>
+    </label>
+    <div class="help-text">When enabled, webpage content will be included with your query for context-aware responses</div>
+  </div>
+  
+  <div class="option-group">
+    <label for="displayMode">Display Mode</label>
+    <select id="displayMode">
+      <option value="popup">Popup</option>
+      <option value="sidepanel">Side Panel</option>
+    </select>
+    <div class="help-text">Choose how you want to interact with the extension</div>
+  </div>
+  
+  <button class="save-button" id="saveButton">Save Settings</button>
+  
+  <div class="status-message" id="statusMessage"></div>
+  
+  <script src="options.js"></script>
+</body>
+</html>

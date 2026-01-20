@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DHTI Screen Grabber - Side Panel</title>
+  <style>
+    body {
+      width: 100%;
+      height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      margin: 0;
+      padding: 16px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    h1 {
+      font-size: 20px;
+      margin: 0 0 16px 0;
+      color: #333;
+    }
+    
+    .input-group {
+      margin-bottom: 12px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: #555;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: inherit;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+    
+    textarea:focus {
+      outline: none;
+      border-color: #4CAF50;
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    
+    button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    
+    .submit-button {
+      background-color: #4CAF50;
+      color: white;
+    }
+    
+    .submit-button:hover:not(:disabled) {
+      background-color: #45a049;
+    }
+    
+    .submit-button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+    
+    .options-button {
+      background-color: #2196F3;
+      color: white;
+      flex: 0 0 100px;
+    }
+    
+    .options-button:hover {
+      background-color: #0b7dda;
+    }
+    
+    .response-container {
+      flex: 1;
+      margin-top: 12px;
+      padding: 16px;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+      border: 1px solid #e0e0e0;
+      overflow-y: auto;
+      display: none;
+    }
+    
+    .response-container.visible {
+      display: block;
+    }
+    
+    .response-label {
+      font-weight: 500;
+      margin-bottom: 12px;
+      color: #333;
+      font-size: 16px;
+    }
+    
+    .response-text {
+      color: #555;
+      line-height: 1.6;
+      font-size: 14px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    
+    .error {
+      background-color: #ffebee;
+      border-color: #ef5350;
+    }
+    
+    .error .response-text {
+      color: #c62828;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+    }
+    
+    .status-info {
+      font-size: 12px;
+      color: #777;
+      margin-top: 8px;
+      padding: 8px;
+      background-color: #f0f0f0;
+      border-radius: 4px;
+    }
+    
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #4CAF50;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <h1>DHTI Screen Grabber</h1>
+  
+  <div class="input-group">
+    <label for="queryInput">Enter your question:</label>
+    <textarea id="queryInput" placeholder="What would you like to know about this page?"></textarea>
+  </div>
+  
+  <div class="button-group">
+    <button class="submit-button" id="submitButton">Submit Query</button>
+    <button class="options-button" id="optionsButton">Options</button>
+  </div>
+  
+  <div class="status-info" id="statusInfo"></div>
+  
+  <div class="response-container" id="responseContainer">
+    <div class="response-label">Response:</div>
+    <div class="response-text" id="responseText"></div>
+  </div>
+  
+  <script src="lib/turndown.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
