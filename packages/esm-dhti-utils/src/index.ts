@@ -14,3 +14,6 @@ export { useDhti } from './hooks/useDhti';
 // Models
 export { CDSHookCard, CDSHookCardSource, CDSHookCardLink, type CDSHookCardIndicator } from './models/card';
 export { CDSHookRequest } from './models/request';
+
+// Components
+export { ScreenCapture, type ScreenCaptureProps, type ScreenCaptureResult } from './components/ScreenCapture';

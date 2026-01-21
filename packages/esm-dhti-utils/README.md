@@ -51,6 +51,72 @@ function DhtiComponent() {
 }
 ```
 
+### Components
+
+#### `ScreenCapture`
+
+A reusable component for capturing rectangular screen areas or extracting image URLs from the page.
+
+**Features:**
+- Left-click and drag to select a rectangular area for capture
+- Right-click on an image to extract its URL
+- Returns captured areas as base64-encoded image data (format: `data:image/png;base64,{base64_image}`)
+- Supports keyboard shortcuts (ESC to cancel)
+- Works across different screen sizes and resolutions
+- Proper error handling for edge cases
+
+**Props:**
+
+- `isActive` (boolean, required): Whether the capture mode is active
+- `onCapture` (function, required): Callback function called when a capture is completed
+- `onCancel` (function, optional): Callback when capture mode is cancelled
+- `className` (string, optional): Custom class name for the overlay
+- `children` (ReactNode, optional): Children to render inside the component
+
+**Example:**
+```typescript
+import { useState } from 'react';
+import { ScreenCapture, type ScreenCaptureResult } from '@openmrs/esm-dhti-utils';
+
+function MyComponent() {
+  const [isCapturing, setIsCapturing] = useState(false);
+
+  const handleCapture = (result: ScreenCaptureResult) => {
+    if (result.error) {
+      console.error('Capture failed:', result.error);
+    } else if (result.type === 'image-data') {
+      console.log('Captured image:', result.imageData);
+      // result.imageData contains base64 encoded PNG
+    } else if (result.type === 'image-url') {
+      console.log('Image URL:', result.imageUrl);
+    }
+    setIsCapturing(false);
+  };
+
+  return (
+    <div>
+      <button onClick={() => setIsCapturing(true)}>Start Screen Capture</button>
+      <ScreenCapture 
+        isActive={isCapturing} 
+        onCapture={handleCapture}
+        onCancel={() => setIsCapturing(false)}
+      />
+    </div>
+  );
+}
+```
+
+**Result Types:**
+
+```typescript
+interface ScreenCaptureResult {
+  type: 'image-data' | 'image-url';
+  imageData?: string;  // For rectangular captures (base64 PNG)
+  imageUrl?: string;   // For right-click image URL extraction
+  error?: string;      // Error message if capture failed
+}
+```
+
 ### Models
 
 #### `CDSHookCard`

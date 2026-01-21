@@ -7,7 +7,7 @@ module.exports = {
     '^@openmrs/esm-framework$': '@openmrs/esm-framework/mock',
     '\\.(s?css)$': 'identity-obj-proxy',
   },
-  setupFilesAfterEnv: [],
+  setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   testEnvironment: 'jsdom',
   testEnvironmentOptions: {
     url: 'http://localhost/',
