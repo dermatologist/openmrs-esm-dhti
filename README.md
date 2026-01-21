@@ -46,6 +46,10 @@ This monorepo contains the following packages:
 - **[esm-starter-app](packages/esm-starter-app/README.md)** - Template application demonstrating OpenMRS ESM best practices
 - **[esm-dhti-upload](packages/esm-dhti-upload/README.md)** - Module for uploading files for RAG.
 
+### Utilities
+
+- ✨ **[dhti-screen-grabber](packages/dhti-screen-grabber/README.md)** - Browser extension to capture webpage content and send to DHTI server
+
 ### Shared Libraries
 
 - **[esm-dhti-utils](packages/esm-dhti-utils/README.md)** - Shared utilities, hooks, and models used across DHTI packages
@@ -84,9 +88,15 @@ If you find this project useful, give us a star. It helps others discover the pr
 
 REF: https://o3-docs.openmrs.org/docs/configure-o3/overview
 
-Implementers can make changes to frontend module configurations through the built-in implementer tools panel. Once you log into O3, clicking the caret arrow centered at the bottom of the screen will pull up the implementer tools. Alternatively, you can click on the cog icon in the navbar. Once open, you can look up configuration properties by searching through the configuration and modify them on the fly. Note that any tweaks made to the configuration through the implementer tools will be lost once you refresh the page. To make permanent changes to the configuration, you will need to commit those changes to your distro's configuration. The implementer tools allow you to download a temporary config file containing your changes by clicking the Download config button.
+You can make changes to frontend module configurations through the built-in implementer tools panel. Once you log into OpenMRS, clicking the caret arrow centered at the bottom of the screen will pull up the implementer tools. Alternatively, you can click on the cog icon in the navbar. Once open, you can look up configuration properties by searching through the configuration and modify them on the fly. Note that any tweaks made to the configuration through the implementer tools will be lost once you refresh the page. To make permanent changes to the configuration, you will need to commit those changes to your module configuration. The implementer tools allow you to download a temporary config file containing your changes by clicking the Download config button. The standard easy approach to configuration overrides to frontend modules is to create a JSON configuration that you can paste into the json editor of the implementers tools. For example:
 
-Typically, you'll need to make multiple configuration overrides to various frontend modules. The standard approach is to create a JSON configuration file that is accessible via HTTP/HTTPS on your server. You can then point your SPA to this configuration file by specifying its URL in the configUrls array of the SPA build configuration file (spa-build-config.json). Alternatively, you can include frontend configuration in content packages (see "Content package frontend configuration" below).
+```json
+{
+  "@openmrs/esm-starter-app": {
+    "exampleSetting": "exampleValue"
+  }
+}
+```
 
 
 

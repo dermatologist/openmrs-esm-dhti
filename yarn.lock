@@ -3396,6 +3396,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@openmrs/dhti-screen-grabber@workspace:packages/dhti-screen-grabber":
+  version: 0.0.0-use.local
+  resolution: "@openmrs/dhti-screen-grabber@workspace:packages/dhti-screen-grabber"
+  languageName: unknown
+  linkType: soft
+
 "@openmrs/esm-api@npm:8.0.1-pre.3669":
   version: 8.0.1-pre.3669
   resolution: "@openmrs/esm-api@npm:8.0.1-pre.3669"

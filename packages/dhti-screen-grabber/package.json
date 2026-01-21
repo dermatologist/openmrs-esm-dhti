@@ -1,0 +1,21 @@
+{
+  "name": "@openmrs/dhti-screen-grabber",
+  "version": "1.0.0",
+  "description": "Chrome extension to capture webpage content and send to DHTI server",
+  "private": true,
+  "keywords": [
+    "chrome-extension",
+    "dhti",
+    "openmrs",
+    "ai",
+    "cds-hooks"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dermatologist/openmrs-esm-dhti.git"
+  },
+  "scripts": {
+    "build": "echo 'Chrome extension - no build step required'",
+    "test": "echo 'Chrome extension - manual testing required'"
+  }
+}
