@@ -46,6 +46,10 @@ This monorepo contains the following packages:
 - **[esm-starter-app](packages/esm-starter-app/README.md)** - Template application demonstrating OpenMRS ESM best practices
 - **[esm-dhti-upload](packages/esm-dhti-upload/README.md)** - Module for uploading files for RAG.
 
+### Utilities
+
+- ✨ **[dhti-screen-grabber](packages/dhti-screen-grabber/README.md)** - Browser extension to capture webpage content and send to DHTI server
+
 ### Shared Libraries
 
 - **[esm-dhti-utils](packages/esm-dhti-utils/README.md)** - Shared utilities, hooks, and models used across DHTI packages
