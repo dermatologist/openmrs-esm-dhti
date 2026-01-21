@@ -15,12 +15,15 @@ export function BasicScreenCaptureExample() {
 
   const handleCapture = (result: ScreenCaptureResult) => {
     if (result.error) {
+      // eslint-disable-next-line no-console
       console.error('Capture failed:', result.error);
       alert(`Error: ${result.error}`);
     } else if (result.type === 'image-data' && result.imageData) {
+      // eslint-disable-next-line no-console
       console.log('Image captured successfully');
       setCapturedImage(result.imageData);
     } else if (result.type === 'image-url' && result.imageUrl) {
+      // eslint-disable-next-line no-console
       console.log('Image URL extracted:', result.imageUrl);
       alert(`Image URL: ${result.imageUrl}`);
     }
@@ -60,11 +63,13 @@ export function AdvancedScreenCaptureExample() {
   const handleCapture = (result: ScreenCaptureResult) => {
     if (result.error) {
       setError(result.error);
+      // eslint-disable-next-line no-console
       console.error('Capture failed:', result.error);
     } else if (result.type === 'image-data' && result.imageData) {
       setCapturedImages(prev => [...prev, result.imageData!]);
       setError(null);
     } else if (result.type === 'image-url' && result.imageUrl) {
+      // eslint-disable-next-line no-console
       console.log('Image URL:', result.imageUrl);
       // You could also add the URL to the gallery
       setCapturedImages(prev => [...prev, result.imageUrl!]);
@@ -155,6 +160,7 @@ export function MedicalRecordCaptureExample() {
 
   const handleCapture = (result: ScreenCaptureResult) => {
     if (result.error) {
+      // eslint-disable-next-line no-console
       console.error('Capture failed:', result.error);
     } else if (result.type === 'image-data' && result.imageData) {
       setCapturedImage(result.imageData);
@@ -180,6 +186,7 @@ export function MedicalRecordCaptureExample() {
       //   method: 'POST',
       //   body: formData,
       // });
+      // eslint-disable-next-line no-console
       console.log('Image saved with notes:', notes);
       alert('Image saved successfully!');
       
