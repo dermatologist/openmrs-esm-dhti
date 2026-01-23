@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useConfig } from '@openmrs/esm-framework';
 import { Button, TextArea, Stack, InlineLoading, Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
-import { Camera, Send } from '@carbon/icons-react';
+import { Camera, Send } from '@carbon/react/icons';
 import { ScreenCapture, type ScreenCaptureResult, useDhti } from '@openmrs/esm-dhti-utils';
 import { OrthancViewer } from './orthanc-viewer.component';
 import type { Config } from '../config-schema';

@@ -64,8 +64,11 @@ export function useOrthanc(orthancUrl: string = 'http://localhost:8042', usernam
       baseURL: orthancUrl,
       transformRequest: [
         (data) => {
-          // Send as JSON string but don't set Content-Type header to avoid CORS preflight
-          return typeof data === 'string' ? data : JSON.stringify(data);
+          // Only transform JSON data, skip if already a string or undefined
+          if (typeof data === 'string' || data === undefined) {
+            return data;
+          }
+          return JSON.stringify(data);
         },
       ],
     };
@@ -166,24 +169,48 @@ export function useOrthanc(orthancUrl: string = 'http://localhost:8042', usernam
 
         for (const instance of instances) {
           try {
-            // Get instance details
+            // Get instance details including parent study/series
             const instanceId = instance.ID;
-            const tags = instance.MainDicomTags || {};
+            const instanceDetails = await axiosInstance.get(`/instances/${instanceId}`);
+            const tags = instanceDetails.data.MainDicomTags || {};
 
-            // Fetch preview image (PNG format)
-            const previewResponse = await axiosInstance.get(`/instances/${instanceId}/preview`, {
+            // Get patient info from parent study
+            let patientName: string | undefined;
+            let studyDescription: string | undefined;
+
+            try {
+              if (instanceDetails.data.ParentStudy) {
+                const studyDetails = await axiosInstance.get(`/studies/${instanceDetails.data.ParentStudy}`);
+                const studyTags = studyDetails.data.MainDicomTags || {};
+                patientName = studyTags.PatientName;
+                studyDescription = studyTags.StudyDescription;
+              }
+            } catch (err) {
+              console.warn(`Failed to get study details for ${instanceId}:`, err);
+            }
+
+            // Fetch preview image (PNG format) with a separate non-transforming instance
+            const binaryAxios = axios.create({ baseURL: orthancUrl });
+            if (username && password) {
+              binaryAxios.defaults.auth = { username, password };
+            }
+
+            const previewResponse = await binaryAxios.get(`/instances/${instanceId}/preview`, {
               responseType: 'arraybuffer',
+              transformResponse: [(data) => data], // Disable default JSON parsing
             });
 
             // Convert to base64
-            const base64Image = Buffer.from(previewResponse.data, 'binary').toString('base64');
+            const base64Image = Buffer.isBuffer(previewResponse.data)
+              ? previewResponse.data.toString('base64')
+              : Buffer.from(previewResponse.data, 'binary').toString('base64');
             const imageData = `data:image/png;base64,${base64Image}`;
 
             images.push({
               id: instanceId,
-              patientId: tags.PatientID || patientId,
-              patientName: tags.PatientName,
-              studyDescription: tags.StudyDescription,
+              patientId: tags.PatientID || instance.PatientId,
+              patientName: patientName,
+              studyDescription: studyDescription || tags.StudyDescription,
               instanceDate: tags.InstanceCreationDate,
               imageData,
             });
@@ -220,13 +247,21 @@ export function useOrthanc(orthancUrl: string = 'http://localhost:8042', usernam
         const instanceResponse = await axiosInstance.get(`/instances/${instanceId}`);
         const tags = instanceResponse.data.MainDicomTags || {};
 
-        // Fetch preview image
-        const previewResponse = await axiosInstance.get(`/instances/${instanceId}/preview`, {
+        // Fetch preview image with separate plain axios (no transform)
+        const binaryAxios = axios.create({ baseURL: orthancUrl });
+        if (username && password) {
+          binaryAxios.defaults.auth = { username, password };
+        }
+
+        const previewResponse = await binaryAxios.get(`/instances/${instanceId}/preview`, {
           responseType: 'arraybuffer',
+          transformResponse: [(data) => data],
         });
 
         // Convert to base64
-        const base64Image = Buffer.from(previewResponse.data, 'binary').toString('base64');
+        const base64Image = Buffer.isBuffer(previewResponse.data)
+          ? previewResponse.data.toString('base64')
+          : Buffer.from(previewResponse.data, 'binary').toString('base64');
         const imageData = `data:image/png;base64,${base64Image}`;
 
         setLoading(false);

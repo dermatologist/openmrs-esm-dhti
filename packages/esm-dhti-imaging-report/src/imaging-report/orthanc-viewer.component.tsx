@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Button, TextInput, Stack, InlineLoading, FileUploader } from '@carbon/react';
-import { ChevronLeft, ChevronRight, Upload, FolderOpen } from '@carbon/icons-react';
+import { ChevronLeft, ChevronRight, Upload, FolderOpen } from '@carbon/react/icons';
 import { useOrthanc, type OrthancImage } from '@openmrs/esm-dhti-utils';
 import styles from './orthanc-viewer.scss';
 
@@ -174,6 +174,9 @@ export const OrthancViewer: React.FC<OrthancViewerProps> = ({
       setLocalImagePreview(null);
       setPatientName('');
       setStudyDescription('');
+
+      // Reload patient images after upload
+      loadPatientImages();
     } else {
       setUploadError(error?.message || 'Failed to upload image');
     }
