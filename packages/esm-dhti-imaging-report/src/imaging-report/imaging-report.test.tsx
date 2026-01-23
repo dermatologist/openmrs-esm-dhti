@@ -1,8 +1,23 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { useConfig } from '@openmrs/esm-framework';
-import { useDhti } from '@openmrs/esm-dhti-utils';
+import { useDhti, useOrthanc } from '@openmrs/esm-dhti-utils';
 import ImagingReportWidget from './imaging-report.component';
+
+// Mock window.matchMedia
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation(query => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
 
 // Mock dependencies
 jest.mock('@openmrs/esm-framework', () => ({
@@ -11,6 +26,7 @@ jest.mock('@openmrs/esm-framework', () => ({
 
 jest.mock('@openmrs/esm-dhti-utils', () => ({
   useDhti: jest.fn(),
+  useOrthanc: jest.fn(),
   ScreenCapture: ({ isActive, onCapture, onCancel }: any) =>
     isActive ? (
       <div data-testid="screen-capture-mock">
@@ -24,6 +40,7 @@ jest.mock('@openmrs/esm-dhti-utils', () => ({
 
 const mockUseConfig = useConfig as jest.MockedFunction<typeof useConfig>;
 const mockUseDhti = useDhti as jest.MockedFunction<typeof useDhti>;
+const mockUseOrthanc = useOrthanc as jest.MockedFunction<typeof useOrthanc>;
 
 describe('ImagingReportWidget', () => {
   const mockConfig = {
@@ -43,6 +60,13 @@ describe('ImagingReportWidget', () => {
       loading: false,
       error: null,
     });
+    mockUseOrthanc.mockReturnValue({
+      uploadImage: jest.fn().mockResolvedValue({ id: 'test-id', patientId: 'patient-123' }),
+      fetchPatientImages: jest.fn().mockResolvedValue([]),
+      fetchInstanceById: jest.fn().mockResolvedValue(null),
+      loading: false,
+      error: null,
+    } as any);
   });
 
   describe('Component rendering', () => {
@@ -234,7 +258,7 @@ describe('ImagingReportWidget', () => {
       fireEvent.click(submitButton);
 
       await waitFor(() => {
-        expect(screen.getByText(/patient context not available/i)).toBeInTheDocument();
+        expect(screen.getAllByText(/patient context not available/i).length).toBeGreaterThan(0);
       });
     });
   });

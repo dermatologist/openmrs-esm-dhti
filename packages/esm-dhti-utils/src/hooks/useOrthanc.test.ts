@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor, act } from '@testing-library/react';
 import { useOrthanc } from './useOrthanc';
 import axios from 'axios';
 
@@ -33,18 +33,19 @@ describe('useOrthanc', () => {
 
       const { result } = renderHook(() => useOrthanc(mockOrthancUrl));
 
-      const uploadResult = await result.current.uploadImage({
-        imageData: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUg',
-        patientId: 'patient-123',
-        patientName: 'John Doe',
-        studyDescription: 'Chest X-Ray',
+      let uploadResult;
+      await act(async () => {
+        uploadResult = await result.current.uploadImage({
+          imageData: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUg',
+          patientId: 'patient-123',
+          patientName: 'John Doe',
+          studyDescription: 'Chest X-Ray',
+        });
       });
 
-      await waitFor(() => {
-        expect(uploadResult).not.toBeNull();
-        expect(uploadResult?.id).toBe('instance-123');
-        expect(uploadResult?.patientId).toBe('patient-123');
-      });
+      expect(uploadResult).not.toBeNull();
+      expect(uploadResult?.id).toBe('instance-123');
+      expect(uploadResult?.patientId).toBe('patient-123');
 
       expect(mockAxiosInstance.post).toHaveBeenCalledWith(
         '/tools/create-dicom',
@@ -54,7 +55,7 @@ describe('useOrthanc', () => {
             PatientName: 'John Doe',
             StudyDescription: 'Chest X-Ray',
           }),
-        })
+        }),
       );
     });
 
@@ -63,15 +64,16 @@ describe('useOrthanc', () => {
 
       const { result } = renderHook(() => useOrthanc(mockOrthancUrl));
 
-      const uploadResult = await result.current.uploadImage({
-        imageData: 'data:image/png;base64,test',
-        patientId: 'patient-123',
+      let uploadResult;
+      await act(async () => {
+        uploadResult = await result.current.uploadImage({
+          imageData: 'data:image/png;base64,test',
+          patientId: 'patient-123',
+        });
       });
 
-      await waitFor(() => {
-        expect(uploadResult).toBeNull();
-        expect(result.current.error).not.toBeNull();
-      });
+      expect(uploadResult).toBeNull();
+      expect(result.current.error).not.toBeNull();
     });
 
     it('should strip data URL prefix from image data', async () => {
@@ -79,19 +81,19 @@ describe('useOrthanc', () => {
 
       const { result } = renderHook(() => useOrthanc(mockOrthancUrl));
 
-      await result.current.uploadImage({
-        imageData: 'data:image/png;base64,testdata',
-        patientId: 'patient-123',
+      await act(async () => {
+        await result.current.uploadImage({
+          imageData: 'data:image/png;base64,testdata',
+          patientId: 'patient-123',
+        });
       });
 
-      await waitFor(() => {
-        expect(mockAxiosInstance.post).toHaveBeenCalledWith(
-          '/tools/create-dicom',
-          expect.objectContaining({
-            Content: 'data:image/png;base64,testdata',
-          })
-        );
-      });
+      expect(mockAxiosInstance.post).toHaveBeenCalledWith(
+        '/tools/create-dicom',
+        expect.objectContaining({
+          Content: 'data:image/png;base64,testdata',
+        }),
+      );
     });
   });
 
@@ -119,14 +121,15 @@ describe('useOrthanc', () => {
 
       const { result } = renderHook(() => useOrthanc(mockOrthancUrl));
 
-      const images = await result.current.fetchPatientImages('patient-123');
-
-      await waitFor(() => {
-        expect(images).toHaveLength(1);
-        expect(images[0].id).toBe('instance-1');
-        expect(images[0].patientId).toBe('patient-123');
-        expect(images[0].patientName).toBe('John Doe');
+      let images;
+      await act(async () => {
+        images = await result.current.fetchPatientImages('patient-123');
       });
+
+      expect(images).toHaveLength(1);
+      expect(images![0].id).toBe('instance-1');
+      expect(images![0].patientId).toBe('patient-123');
+      expect(images![0].patientName).toBe('John Doe');
 
       expect(mockAxiosInstance.post).toHaveBeenCalledWith('/tools/find', {
         Level: 'Instance',
@@ -142,12 +145,13 @@ describe('useOrthanc', () => {
 
       const { result } = renderHook(() => useOrthanc(mockOrthancUrl));
 
-      const images = await result.current.fetchPatientImages('patient-123');
-
-      await waitFor(() => {
-        expect(images).toEqual([]);
-        expect(result.current.error).not.toBeNull();
+      let images;
+      await act(async () => {
+        images = await result.current.fetchPatientImages('patient-123');
       });
+
+      expect(images).toEqual([]);
+      expect(result.current.error).not.toBeNull();
     });
 
     it('should skip instances that fail to load', async () => {
@@ -175,12 +179,13 @@ describe('useOrthanc', () => {
 
       const { result } = renderHook(() => useOrthanc(mockOrthancUrl));
 
-      const images = await result.current.fetchPatientImages('patient-123');
-
-      await waitFor(() => {
-        expect(images).toHaveLength(1);
-        expect(images[0].id).toBe('instance-1');
+      let images;
+      await act(async () => {
+        images = await result.current.fetchPatientImages('patient-123');
       });
+
+      expect(images).toHaveLength(1);
+      expect(images![0].id).toBe('instance-1');
     });
   });
 
@@ -200,19 +205,18 @@ describe('useOrthanc', () => {
         data: Buffer.from('mock-image-data'),
       };
 
-      mockAxiosInstance.get
-        .mockResolvedValueOnce(mockInstanceResponse)
-        .mockResolvedValueOnce(mockPreviewResponse);
+      mockAxiosInstance.get.mockResolvedValueOnce(mockInstanceResponse).mockResolvedValueOnce(mockPreviewResponse);
 
       const { result } = renderHook(() => useOrthanc(mockOrthancUrl));
 
-      const instance = await result.current.fetchInstanceById('instance-123');
-
-      await waitFor(() => {
-        expect(instance).not.toBeNull();
-        expect(instance?.id).toBe('instance-123');
-        expect(instance?.patientId).toBe('patient-123');
+      let instance;
+      await act(async () => {
+        instance = await result.current.fetchInstanceById('instance-123');
       });
+
+      expect(instance).not.toBeNull();
+      expect(instance?.id).toBe('instance-123');
+      expect(instance?.patientId).toBe('patient-123');
     });
 
     it('should handle instance fetch error', async () => {
@@ -220,18 +224,28 @@ describe('useOrthanc', () => {
 
       const { result } = renderHook(() => useOrthanc(mockOrthancUrl));
 
-      const instance = await result.current.fetchInstanceById('instance-123');
-
-      await waitFor(() => {
-        expect(instance).toBeNull();
-        expect(result.current.error).not.toBeNull();
+      let instance;
+      await act(async () => {
+        instance = await result.current.fetchInstanceById('instance-123');
       });
+
+      expect(instance).toBeNull();
+      expect(result.current.error).not.toBeNull();
     });
   });
 
   describe('authentication', () => {
-    it('should create axios instance with authentication when credentials provided', () => {
-      renderHook(() => useOrthanc(mockOrthancUrl, 'username', 'password'));
+    it('should create axios instance with authentication when credentials provided', async () => {
+      mockAxiosInstance.post.mockResolvedValue({ data: { ID: 'test' } });
+
+      const { result } = renderHook(() => useOrthanc(mockOrthancUrl, 'username', 'password'));
+
+      await act(async () => {
+        await result.current.uploadImage({
+          imageData: 'data:image/png;base64,test',
+          patientId: 'patient-123',
+        });
+      });
 
       expect(mockedAxios.create).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -239,17 +253,26 @@ describe('useOrthanc', () => {
             username: 'username',
             password: 'password',
           },
-        })
+        }),
       );
     });
 
-    it('should create axios instance without authentication when credentials not provided', () => {
-      renderHook(() => useOrthanc(mockOrthancUrl));
+    it('should create axios instance without authentication when credentials not provided', async () => {
+      mockAxiosInstance.post.mockResolvedValue({ data: { ID: 'test' } });
+
+      const { result } = renderHook(() => useOrthanc(mockOrthancUrl));
+
+      await act(async () => {
+        await result.current.uploadImage({
+          imageData: 'data:image/png;base64,test',
+          patientId: 'patient-123',
+        });
+      });
 
       expect(mockedAxios.create).toHaveBeenCalledWith(
         expect.not.objectContaining({
           auth: expect.anything(),
-        })
+        }),
       );
     });
   });
@@ -257,14 +280,17 @@ describe('useOrthanc', () => {
   describe('loading state', () => {
     it('should set loading state during upload', async () => {
       mockAxiosInstance.post.mockImplementation(
-        () => new Promise((resolve) => setTimeout(() => resolve({ data: { ID: 'test' } }), 100))
+        () => new Promise((resolve) => setTimeout(() => resolve({ data: { ID: 'test' } }), 100)),
       );
 
       const { result } = renderHook(() => useOrthanc(mockOrthancUrl));
 
-      const uploadPromise = result.current.uploadImage({
-        imageData: 'data:image/png;base64,test',
-        patientId: 'patient-123',
+      let uploadPromise;
+      act(() => {
+        uploadPromise = result.current.uploadImage({
+          imageData: 'data:image/png;base64,test',
+          patientId: 'patient-123',
+        });
       });
 
       // Should be loading
