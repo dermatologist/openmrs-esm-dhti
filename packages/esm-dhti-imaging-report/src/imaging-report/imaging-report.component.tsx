@@ -17,7 +17,7 @@ interface ImagingReportWidgetProps {
 
 /**
  * ImagingReportWidget Component
- * 
+ *
  * This component provides GenAI-powered imaging analysis and reporting capabilities.
  * It allows users to:
  * - Capture screen areas or extract image URLs using the ScreenCapture component
@@ -25,7 +25,7 @@ interface ImagingReportWidgetProps {
  * - Ask queries about the captured/selected images
  * - Submit the image and query to the DHTI backend for AI-powered analysis
  * - Display the GenAI-generated response
- * 
+ *
  * The widget is designed to be displayed in the patient chart's imaging dashboard slot.
  */
 const ImagingReportWidget: React.FC<ImagingReportWidgetProps> = ({ patientUuid }) => {
@@ -45,7 +45,7 @@ const ImagingReportWidget: React.FC<ImagingReportWidgetProps> = ({ patientUuid }
    */
   const handleCapture = useCallback((result: ScreenCaptureResult) => {
     setError(null);
-    
+
     if (result.error) {
       setError(result.error);
       setIsCapturing(false);
@@ -60,7 +60,7 @@ const ImagingReportWidget: React.FC<ImagingReportWidgetProps> = ({ patientUuid }
         setIsCapturing(false);
         return;
       }
-      
+
       setCapturedImageUrl(result.imageData);
       setImageSource('capture');
     } else if (result.type === 'image-url' && result.imageUrl) {
@@ -119,7 +119,7 @@ const ImagingReportWidget: React.FC<ImagingReportWidgetProps> = ({ patientUuid }
       if (result) {
         // Display the response
         setResponse(result.summary || 'Analysis completed successfully');
-        
+
         // If there's detail text, append it
         if (result.detail) {
           setResponse(prev => `${prev}\n\n${result.detail}`);
@@ -142,6 +142,16 @@ const ImagingReportWidget: React.FC<ImagingReportWidgetProps> = ({ patientUuid }
     setError(null);
   }, []);
 
+  // Helper to extract error message
+  function getErrorMessage(err: unknown): string | undefined {
+    if (!err) return undefined;
+    if (typeof err === 'string') return err;
+    if (typeof err === 'object' && 'message' in err && typeof (err as any).message === 'string') {
+      return (err as any).message;
+    }
+    return undefined;
+  }
+
   return (
     <div className={styles.container}>
       <h3 className={styles.title}>{config.dhtiTitle}</h3>
@@ -152,7 +162,7 @@ const ImagingReportWidget: React.FC<ImagingReportWidgetProps> = ({ patientUuid }
           <Tab>Screen Capture</Tab>
           <Tab>DICOM Viewer</Tab>
         </TabList>
-        
+
         <TabPanels>
           {/* Screen Capture Tab */}
           <TabPanel>
@@ -170,9 +180,9 @@ const ImagingReportWidget: React.FC<ImagingReportWidgetProps> = ({ patientUuid }
 
                 {capturedImageUrl && imageSource === 'capture' && (
                   <div className={styles.imagePreview}>
-                    <img 
-                      src={capturedImageUrl} 
-                      alt="Captured medical image" 
+                    <img
+                      src={capturedImageUrl}
+                      alt="Captured medical image"
                       className={styles.previewImage}
                     />
                   </div>
@@ -246,7 +256,7 @@ const ImagingReportWidget: React.FC<ImagingReportWidgetProps> = ({ patientUuid }
       {(error || dhtiError) && (
         <div className={styles.errorSection}>
           <p className={styles.errorText}>
-            <strong>Error:</strong> {error || dhtiError?.message}
+            <strong>Error:</strong> {error || getErrorMessage(dhtiError)}
           </p>
         </div>
       )}
