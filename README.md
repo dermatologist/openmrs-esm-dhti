@@ -45,6 +45,7 @@ This monorepo contains the following packages:
 - **[esm-generic-display](packages/esm-generic-display/README.md)** - Generic display widget for AI-powered insights
 - **[esm-starter-app](packages/esm-starter-app/README.md)** - Template application demonstrating OpenMRS ESM best practices
 - **[esm-dhti-upload](packages/esm-dhti-upload/README.md)** - Module for uploading files for RAG.
+- **[esm-dhti-imaging-report](packages/esm-dhti-imaging-report/README.md)** - GenAI-powered imaging report widget.
 
 ### Utilities
 
