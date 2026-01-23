@@ -87,8 +87,9 @@ export const OrthancViewer: React.FC<OrthancViewerProps> = ({
     setImages(fetchedImages);
 
     if (fetchedImages.length > 0) {
-      setCurrentIndex(0);
-      displayImage(fetchedImages[0]);
+      const newestIndex = fetchedImages.length - 1;
+      setCurrentIndex(newestIndex);
+      displayImage(fetchedImages[newestIndex]);
     }
   }, [patientId, fetchPatientImages, displayImage]);
 

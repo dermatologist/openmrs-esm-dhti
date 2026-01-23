@@ -1,6 +1,36 @@
 import { useState, useCallback } from 'react';
 import axios from 'axios';
 
+function arrayBufferToBase64(data: ArrayBuffer | Uint8Array): string {
+  const bytes = data instanceof Uint8Array ? data : new Uint8Array(data);
+  const chunkSize = 0x8000;
+  let binary = '';
+
+  for (let offset = 0; offset < bytes.length; offset += chunkSize) {
+    const chunk = bytes.subarray(offset, offset + chunkSize);
+    binary += String.fromCharCode(...chunk);
+  }
+
+  return btoa(binary);
+}
+
+function parsePossiblyJsonResponse(data: unknown): any {
+  if (data == null || data === '') {
+    return undefined;
+  }
+  if (typeof data === 'object') {
+    return data;
+  }
+  if (typeof data === 'string') {
+    try {
+      return JSON.parse(data);
+    } catch {
+      return undefined;
+    }
+  }
+  return undefined;
+}
+
 /**
  * Orthanc DICOM Image metadata
  */
@@ -83,6 +113,14 @@ export function useOrthanc(orthancUrl: string = 'http://localhost:8042', usernam
     return axios.create(config);
   }, [orthancUrl, username, password]);
 
+  const getBinaryAxiosInstance = useCallback(() => {
+    const instance = axios.create({ baseURL: orthancUrl });
+    if (username && password) {
+      instance.defaults.auth = { username, password };
+    }
+    return instance;
+  }, [orthancUrl, username, password]);
+
   /**
    * Convert PNG base64 data to DICOM and upload to Orthanc
    *
@@ -116,11 +154,15 @@ export function useOrthanc(orthancUrl: string = 'http://localhost:8042', usernam
         };
 
         // Upload to Orthanc using /tools/create-dicom endpoint
-        // Note: Intentionally NOT setting Content-Type header to avoid CORS preflight OPTIONS
-        const response = await axiosInstance.post('/tools/create-dicom', dicomData);
+        // Send as a "simple" CORS request to avoid preflight OPTIONS
+        const response = await axiosInstance.post('/tools/create-dicom', dicomData, {
+          headers: { 'Content-Type': 'text/plain' },
+        });
+
+        const parsed = parsePossiblyJsonResponse(response.data);
 
         // Handle response - may return 200 with no content or with instance ID
-        const instanceId = response.data?.ID || `orthanc-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        const instanceId = parsed?.ID || `orthanc-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
 
         setLoading(false);
 
@@ -153,16 +195,20 @@ export function useOrthanc(orthancUrl: string = 'http://localhost:8042', usernam
       try {
         const axiosInstance = getAxiosInstance();
 
-        // Use /tools/find to search for patient
-        const findResponse = await axiosInstance.post('/tools/find', {
-          Level: 'Instance',
-          Query: {
-            PatientID: patientId,
+        // Use /tools/find to search for patient (send as simple request to avoid preflight)
+        const findResponse = await axiosInstance.post(
+          '/tools/find',
+          {
+            Level: 'Instance',
+            Query: {
+              PatientID: patientId,
+            },
+            Expand: true,
           },
-          Expand: true,
-        });
+          { headers: { 'Content-Type': 'text/plain' } },
+        );
 
-        const instances = findResponse.data;
+        const instances = Array.isArray(findResponse.data) ? findResponse.data : [];
 
         // Fetch details and preview for each instance
         const images: OrthancImage[] = [];
@@ -190,10 +236,7 @@ export function useOrthanc(orthancUrl: string = 'http://localhost:8042', usernam
             }
 
             // Fetch preview image (PNG format) with a separate non-transforming instance
-            const binaryAxios = axios.create({ baseURL: orthancUrl });
-            if (username && password) {
-              binaryAxios.defaults.auth = { username, password };
-            }
+            const binaryAxios = getBinaryAxiosInstance();
 
             const previewResponse = await binaryAxios.get(`/instances/${instanceId}/preview`, {
               responseType: 'arraybuffer',
@@ -201,15 +244,13 @@ export function useOrthanc(orthancUrl: string = 'http://localhost:8042', usernam
             });
 
             // Convert to base64
-            const base64Image = Buffer.isBuffer(previewResponse.data)
-              ? previewResponse.data.toString('base64')
-              : Buffer.from(previewResponse.data, 'binary').toString('base64');
+            const base64Image = arrayBufferToBase64(previewResponse.data as ArrayBuffer);
             const imageData = `data:image/png;base64,${base64Image}`;
 
             images.push({
               id: instanceId,
-              patientId: tags.PatientID || instance.PatientId,
-              patientName: patientName,
+              patientId: tags.PatientID || patientId,
+              patientName,
               studyDescription: studyDescription || tags.StudyDescription,
               instanceDate: tags.InstanceCreationDate,
               imageData,
@@ -229,7 +270,7 @@ export function useOrthanc(orthancUrl: string = 'http://localhost:8042', usernam
         return [];
       }
     },
-    [getAxiosInstance],
+    [getAxiosInstance, getBinaryAxiosInstance],
   );
 
   /**
@@ -248,10 +289,7 @@ export function useOrthanc(orthancUrl: string = 'http://localhost:8042', usernam
         const tags = instanceResponse.data.MainDicomTags || {};
 
         // Fetch preview image with separate plain axios (no transform)
-        const binaryAxios = axios.create({ baseURL: orthancUrl });
-        if (username && password) {
-          binaryAxios.defaults.auth = { username, password };
-        }
+        const binaryAxios = getBinaryAxiosInstance();
 
         const previewResponse = await binaryAxios.get(`/instances/${instanceId}/preview`, {
           responseType: 'arraybuffer',
@@ -259,9 +297,7 @@ export function useOrthanc(orthancUrl: string = 'http://localhost:8042', usernam
         });
 
         // Convert to base64
-        const base64Image = Buffer.isBuffer(previewResponse.data)
-          ? previewResponse.data.toString('base64')
-          : Buffer.from(previewResponse.data, 'binary').toString('base64');
+        const base64Image = arrayBufferToBase64(previewResponse.data as ArrayBuffer);
         const imageData = `data:image/png;base64,${base64Image}`;
 
         setLoading(false);
@@ -281,7 +317,7 @@ export function useOrthanc(orthancUrl: string = 'http://localhost:8042', usernam
         return null;
       }
     },
-    [getAxiosInstance],
+    [getAxiosInstance, getBinaryAxiosInstance],
   );
 
   return {
