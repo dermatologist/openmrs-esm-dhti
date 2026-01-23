@@ -48,13 +48,13 @@ describe('ImagingReportWidget', () => {
   describe('Component rendering', () => {
     it('should render with title from config', () => {
       render(<ImagingReportWidget patientUuid="test-patient-123" />);
-      
+
       expect(screen.getByText('Imaging Report')).toBeInTheDocument();
     });
 
     it('should render capture button when screen capture is enabled', () => {
       render(<ImagingReportWidget patientUuid="test-patient-123" />);
-      
+
       expect(screen.getByRole('button', { name: /capture image/i })).toBeInTheDocument();
     });
 
@@ -65,7 +65,7 @@ describe('ImagingReportWidget', () => {
       });
 
       render(<ImagingReportWidget patientUuid="test-patient-123" />);
-      
+
       expect(screen.queryByRole('button', { name: /capture image/i })).not.toBeInTheDocument();
     });
   });
@@ -73,22 +73,22 @@ describe('ImagingReportWidget', () => {
   describe('Screen capture functionality', () => {
     it('should open screen capture overlay when button is clicked', () => {
       render(<ImagingReportWidget patientUuid="test-patient-123" />);
-      
+
       const captureButton = screen.getByRole('button', { name: /capture image/i });
       fireEvent.click(captureButton);
-      
+
       expect(screen.getByTestId('screen-capture-mock')).toBeInTheDocument();
     });
 
     it('should display captured image after successful capture', async () => {
       render(<ImagingReportWidget patientUuid="test-patient-123" />);
-      
+
       const captureButton = screen.getByRole('button', { name: /capture image/i });
       fireEvent.click(captureButton);
-      
+
       const mockCaptureButton = screen.getByText('Mock Capture');
       fireEvent.click(mockCaptureButton);
-      
+
       await waitFor(() => {
         expect(screen.getByAltText('Captured medical image')).toBeInTheDocument();
       });
@@ -96,13 +96,13 @@ describe('ImagingReportWidget', () => {
 
     it('should show query section after image is captured', async () => {
       render(<ImagingReportWidget patientUuid="test-patient-123" />);
-      
+
       const captureButton = screen.getByRole('button', { name: /capture image/i });
       fireEvent.click(captureButton);
-      
+
       const mockCaptureButton = screen.getByText('Mock Capture');
       fireEvent.click(mockCaptureButton);
-      
+
       await waitFor(() => {
         expect(screen.getByLabelText(/ask a question about the image/i)).toBeInTheDocument();
       });
@@ -110,17 +110,20 @@ describe('ImagingReportWidget', () => {
 
     it('should handle capture errors', async () => {
       render(<ImagingReportWidget patientUuid="test-patient-123" />);
-      
+
       const captureButton = screen.getByRole('button', { name: /capture image/i });
       fireEvent.click(captureButton);
-      
-      // Mock error capture
-      const screenCapture = screen.getByTestId('screen-capture-mock');
-      const onCapture = jest.fn();
-      
-      // Simulate error by directly calling the component's capture handler
-      // In real scenario, this would be triggered by ScreenCapture component
-      
+
+      // Verify the screen capture mock is shown
+      await waitFor(() => {
+        expect(screen.getByTestId('screen-capture-mock')).toBeInTheDocument();
+      });
+
+      // Click the cancel button to hide the capture UI
+      const cancelButton = screen.getByRole('button', { name: /mock cancel/i });
+      fireEvent.click(cancelButton);
+
+      // The capture UI should be hidden after cancel
       await waitFor(() => {
         expect(screen.queryByTestId('screen-capture-mock')).not.toBeInTheDocument();
       });
@@ -130,13 +133,13 @@ describe('ImagingReportWidget', () => {
   describe('Query submission', () => {
     const setupWithCapturedImage = async () => {
       render(<ImagingReportWidget patientUuid="test-patient-123" />);
-      
+
       const captureButton = screen.getByRole('button', { name: /capture image/i });
       fireEvent.click(captureButton);
-      
+
       const mockCaptureButton = screen.getByText('Mock Capture');
       fireEvent.click(mockCaptureButton);
-      
+
       await waitFor(() => {
         expect(screen.getByAltText('Captured medical image')).toBeInTheDocument();
       });
@@ -144,10 +147,10 @@ describe('ImagingReportWidget', () => {
 
     it('should enable submit button when query is entered', async () => {
       await setupWithCapturedImage();
-      
+
       const textarea = screen.getByLabelText(/ask a question about the image/i);
       fireEvent.change(textarea, { target: { value: 'What is this?' } });
-      
+
       const submitButton = screen.getByRole('button', { name: /submit query/i });
       expect(submitButton).not.toBeDisabled();
     });
@@ -159,13 +162,13 @@ describe('ImagingReportWidget', () => {
       });
 
       await setupWithCapturedImage();
-      
+
       const textarea = screen.getByLabelText(/ask a question about the image/i);
       fireEvent.change(textarea, { target: { value: 'What abnormalities are present?' } });
-      
+
       const submitButton = screen.getByRole('button', { name: /submit query/i });
       fireEvent.click(submitButton);
-      
+
       await waitFor(() => {
         expect(mockSubmitMessage).toHaveBeenCalledWith(
           expect.stringContaining('"image_url":"data:image/png;base64,test"'),
@@ -182,15 +185,15 @@ describe('ImagingReportWidget', () => {
       });
 
       await setupWithCapturedImage();
-      
+
       const textarea = screen.getByLabelText(/ask a question about the image/i);
       fireEvent.change(textarea, { target: { value: 'Analyze this image' } });
-      
+
       const submitButton = screen.getByRole('button', { name: /submit query/i });
       fireEvent.click(submitButton);
-      
+
       await waitFor(() => {
-        expect(screen.getByText(/analysis result/i)).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: /analysis result/i })).toBeInTheDocument();
         expect(screen.getByText('Test analysis result')).toBeInTheDocument();
       });
     });
@@ -199,37 +202,37 @@ describe('ImagingReportWidget', () => {
       mockSubmitMessage.mockRejectedValue(new Error('Network error'));
 
       await setupWithCapturedImage();
-      
+
       const textarea = screen.getByLabelText(/ask a question about the image/i);
       fireEvent.change(textarea, { target: { value: 'Analyze this image' } });
-      
+
       const submitButton = screen.getByRole('button', { name: /submit query/i });
       fireEvent.click(submitButton);
-      
+
       await waitFor(() => {
-        expect(screen.getByText(/error/i)).toBeInTheDocument();
+        expect(screen.getByText('Network error')).toBeInTheDocument();
       });
     });
 
     it('should show error when patient UUID is not available', async () => {
       render(<ImagingReportWidget />);
-      
+
       const captureButton = screen.getByRole('button', { name: /capture image/i });
       fireEvent.click(captureButton);
-      
+
       const mockCaptureButton = screen.getByText('Mock Capture');
       fireEvent.click(mockCaptureButton);
-      
+
       await waitFor(() => {
         expect(screen.getByAltText('Captured medical image')).toBeInTheDocument();
       });
-      
+
       const textarea = screen.getByLabelText(/ask a question about the image/i);
       fireEvent.change(textarea, { target: { value: 'Test query' } });
-      
+
       const submitButton = screen.getByRole('button', { name: /submit query/i });
       fireEvent.click(submitButton);
-      
+
       await waitFor(() => {
         expect(screen.getByText(/patient context not available/i)).toBeInTheDocument();
       });
@@ -243,34 +246,34 @@ describe('ImagingReportWidget', () => {
       });
 
       render(<ImagingReportWidget patientUuid="test-patient-123" />);
-      
+
       // Capture image
       const captureButton = screen.getByRole('button', { name: /capture image/i });
       fireEvent.click(captureButton);
-      
+
       const mockCaptureButton = screen.getByText('Mock Capture');
       fireEvent.click(mockCaptureButton);
-      
+
       await waitFor(() => {
         expect(screen.getByAltText('Captured medical image')).toBeInTheDocument();
       });
-      
+
       // Enter query
       const textarea = screen.getByLabelText(/ask a question about the image/i);
       fireEvent.change(textarea, { target: { value: 'Test query' } });
-      
+
       // Submit
       const submitButton = screen.getByRole('button', { name: /submit query/i });
       fireEvent.click(submitButton);
-      
+
       await waitFor(() => {
         expect(screen.getByText('Test result')).toBeInTheDocument();
       });
-      
+
       // Clear
       const clearButton = screen.getByRole('button', { name: /clear/i });
       fireEvent.click(clearButton);
-      
+
       // Check everything is cleared
       expect(screen.queryByAltText('Captured medical image')).not.toBeInTheDocument();
       expect(screen.queryByLabelText(/ask a question about the image/i)).not.toBeInTheDocument();
@@ -287,7 +290,7 @@ describe('ImagingReportWidget', () => {
       });
 
       render(<ImagingReportWidget patientUuid="test-patient-123" />);
-      
+
       expect(screen.getByText(/analyzing image/i)).toBeInTheDocument();
     });
 
@@ -299,7 +302,7 @@ describe('ImagingReportWidget', () => {
       });
 
       render(<ImagingReportWidget patientUuid="test-patient-123" />);
-      
+
       const captureButton = screen.getByRole('button', { name: /capture image/i });
       expect(captureButton).toBeDisabled();
     });
