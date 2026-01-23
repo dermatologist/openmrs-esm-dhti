@@ -7,7 +7,7 @@
   "extensions": [
     {
       "name": "imaging-report-widget",
-      "slot": "patient-chart-imaging-dashboard-slot",
+      "slot": "patient-chart-summary-dashboard-slot",
       "component": "imagingReportWidget",
       "meta": {
         "columnSpan": 4
