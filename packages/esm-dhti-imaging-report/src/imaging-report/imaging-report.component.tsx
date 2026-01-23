@@ -159,12 +159,11 @@ const ImagingReportWidget: React.FC<ImagingReportWidgetProps> = ({ patientUuid }
       {/* Tabbed interface for image selection */}
       <Tabs>
         <TabList aria-label="Image selection methods">
-          <Tab>Screen Capture</Tab>
           <Tab>DICOM Viewer</Tab>
         </TabList>
 
         <TabPanels>
-          {/* Screen Capture Tab */}
+          {/* Orthanc DICOM Viewer Tab */}
           <TabPanel>
             {config.enableScreenCapture && (
               <div className={styles.captureSection}>
@@ -189,10 +188,7 @@ const ImagingReportWidget: React.FC<ImagingReportWidgetProps> = ({ patientUuid }
                 )}
               </div>
             )}
-          </TabPanel>
 
-          {/* Orthanc DICOM Viewer Tab */}
-          <TabPanel>
             {patientUuid && (
               <OrthancViewer
                 patientId={patientUuid}

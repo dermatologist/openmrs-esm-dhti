@@ -16,16 +16,16 @@ export interface OrthancViewerProps {
 
 /**
  * OrthancViewer Component
- * 
+ *
  * This component provides functionality to:
  * - View DICOM images from an Orthanc server for a specific patient
  * - Upload local PNG images to the Orthanc server
  * - Navigate through patient images
  * - Select images for analysis
- * 
+ *
  * @example
  * ```tsx
- * <OrthancViewer 
+ * <OrthancViewer
  *   patientId="patient-123"
  *   orthancUrl="http://localhost:8042"
  *   onImageSelect={(url) => console.log('Selected:', url)}
@@ -51,28 +51,6 @@ export const OrthancViewer: React.FC<OrthancViewerProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   /**
-   * Load patient images on component mount and when patientId changes
-   */
-  useEffect(() => {
-    if (patientId) {
-      loadPatientImages();
-    }
-  }, [patientId]);
-
-  /**
-   * Load all images for the current patient
-   */
-  const loadPatientImages = useCallback(async () => {
-    const fetchedImages = await fetchPatientImages(patientId);
-    setImages(fetchedImages);
-    
-    if (fetchedImages.length > 0) {
-      setCurrentIndex(0);
-      displayImage(fetchedImages[0]);
-    }
-  }, [patientId, fetchPatientImages]);
-
-  /**
    * Display an image on the canvas
    */
   const displayImage = useCallback((image: OrthancImage | null) => {
@@ -87,7 +65,7 @@ export const OrthancViewer: React.FC<OrthancViewerProps> = ({
       // Set canvas size to match image
       canvas.width = img.width;
       canvas.height = img.height;
-      
+
       // Draw image
       ctx.drawImage(img, 0, 0);
     };
@@ -98,6 +76,30 @@ export const OrthancViewer: React.FC<OrthancViewerProps> = ({
       onImageSelect(image.imageData);
     }
   }, [onImageSelect]);
+
+  /**
+   * Load all images for the current patient
+   */
+  const loadPatientImages = useCallback(async () => {
+    if (!patientId) return;
+
+    const fetchedImages = await fetchPatientImages(patientId);
+    setImages(fetchedImages);
+
+    if (fetchedImages.length > 0) {
+      setCurrentIndex(0);
+      displayImage(fetchedImages[0]);
+    }
+  }, [patientId, fetchPatientImages, displayImage]);
+
+  /**
+   * Load patient images on component mount and when patientId changes
+   */
+  useEffect(() => {
+    if (patientId) {
+      loadPatientImages();
+    }
+  }, [patientId, loadPatientImages]);
 
   /**
    * Handle file selection for local image upload
@@ -154,34 +156,24 @@ export const OrthancViewer: React.FC<OrthancViewerProps> = ({
       return;
     }
 
-    if (!patientName.trim()) {
-      setUploadError('Please enter a patient name');
-      return;
-    }
-
     setUploadSuccess(null);
     setUploadError(null);
 
     const result = await uploadImage({
       imageData: localImagePreview,
       patientId,
-      patientName: patientName.trim(),
+      patientName: patientName.trim() || undefined,
       studyDescription: studyDescription.trim() || 'Uploaded Image',
     });
 
     if (result) {
       setUploadSuccess(`Image uploaded successfully (ID: ${result.id})`);
-      
+
       // Clear form
       setLocalImageFile(null);
       setLocalImagePreview(null);
       setPatientName('');
       setStudyDescription('');
-
-      // Reload patient images
-      setTimeout(() => {
-        loadPatientImages();
-      }, 1000);
     } else {
       setUploadError(error?.message || 'Failed to upload image');
     }
@@ -192,7 +184,7 @@ export const OrthancViewer: React.FC<OrthancViewerProps> = ({
    */
   const handlePrevious = useCallback(() => {
     if (images.length === 0) return;
-    
+
     const newIndex = currentIndex > 0 ? currentIndex - 1 : images.length - 1;
     setCurrentIndex(newIndex);
     displayImage(images[newIndex]);
@@ -203,7 +195,7 @@ export const OrthancViewer: React.FC<OrthancViewerProps> = ({
    */
   const handleNext = useCallback(() => {
     if (images.length === 0) return;
-    
+
     const newIndex = currentIndex < images.length - 1 ? currentIndex + 1 : 0;
     setCurrentIndex(newIndex);
     displayImage(images[newIndex]);
@@ -227,7 +219,7 @@ export const OrthancViewer: React.FC<OrthancViewerProps> = ({
       {/* Canvas for displaying images */}
       <div className={styles.canvasContainer}>
         <canvas ref={canvasRef} className={styles.canvas} />
-        
+
         {!localImagePreview && images.length === 0 && !loading && (
           <div className={styles.emptyState}>
             <p>No images available. Upload an image to get started.</p>
@@ -247,11 +239,11 @@ export const OrthancViewer: React.FC<OrthancViewerProps> = ({
             onClick={handlePrevious}
             disabled={loading}
           />
-          
+
           <span className={styles.imageCounter}>
             {currentIndex + 1} / {images.length}
           </span>
-          
+
           <Button
             kind="ghost"
             size="sm"
@@ -280,7 +272,7 @@ export const OrthancViewer: React.FC<OrthancViewerProps> = ({
       {/* Upload section */}
       <div className={styles.uploadSection}>
         <h5 className={styles.sectionTitle}>Upload New Image</h5>
-        
+
         <div className={styles.fileInput}>
           <input
             type="file"
@@ -328,7 +320,7 @@ export const OrthancViewer: React.FC<OrthancViewerProps> = ({
               size="md"
               renderIcon={Upload}
               onClick={handleUpload}
-              disabled={loading || !patientName.trim()}
+              disabled={loading}
             >
               {loading ? 'Uploading...' : 'Upload to Orthanc'}
             </Button>

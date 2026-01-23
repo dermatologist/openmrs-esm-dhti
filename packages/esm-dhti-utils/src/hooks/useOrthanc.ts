@@ -25,20 +25,20 @@ export interface UploadImageParams {
 
 /**
  * Hook for interacting with Orthanc DICOM server
- * 
+ *
  * Provides functionality to:
  * - Upload PNG images as DICOM files
  * - Fetch images for a given patient
  * - Navigate through patient images
- * 
+ *
  * @param orthancUrl - Base URL of the Orthanc server (default: http://localhost:8042)
  * @param username - Optional username for basic auth
  * @param password - Optional password for basic auth
- * 
+ *
  * @example
  * ```tsx
  * const { uploadImage, fetchPatientImages, loading, error } = useOrthanc('http://localhost:8042');
- * 
+ *
  * const handleUpload = async () => {
  *   const result = await uploadImage({
  *     imageData: 'data:image/png;base64,...',
@@ -52,11 +52,7 @@ export interface UploadImageParams {
  * };
  * ```
  */
-export function useOrthanc(
-  orthancUrl: string = 'http://localhost:8042',
-  username?: string,
-  password?: string
-) {
+export function useOrthanc(orthancUrl: string = 'http://localhost:8042', username?: string, password?: string) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -66,9 +62,12 @@ export function useOrthanc(
   const getAxiosInstance = useCallback(() => {
     const config: any = {
       baseURL: orthancUrl,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      transformRequest: [
+        (data) => {
+          // Send as JSON string but don't set Content-Type header to avoid CORS preflight
+          return typeof data === 'string' ? data : JSON.stringify(data);
+        },
+      ],
     };
 
     if (username && password) {
@@ -83,7 +82,7 @@ export function useOrthanc(
 
   /**
    * Convert PNG base64 data to DICOM and upload to Orthanc
-   * 
+   *
    * Uses the /tools/create-dicom endpoint to convert PNG to DICOM format
    */
   const uploadImage = useCallback(
@@ -114,10 +113,11 @@ export function useOrthanc(
         };
 
         // Upload to Orthanc using /tools/create-dicom endpoint
+        // Note: Intentionally NOT setting Content-Type header to avoid CORS preflight OPTIONS
         const response = await axiosInstance.post('/tools/create-dicom', dicomData);
 
-        // The response contains the instance ID
-        const instanceId = response.data.ID;
+        // Handle response - may return 200 with no content or with instance ID
+        const instanceId = response.data?.ID || `orthanc-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
         setLoading(false);
 
@@ -134,12 +134,12 @@ export function useOrthanc(
         return null;
       }
     },
-    [getAxiosInstance]
+    [getAxiosInstance],
   );
 
   /**
    * Fetch all images for a given patient ID
-   * 
+   *
    * Uses the /tools/find endpoint to search for patient images
    */
   const fetchPatientImages = useCallback(
@@ -202,7 +202,7 @@ export function useOrthanc(
         return [];
       }
     },
-    [getAxiosInstance]
+    [getAxiosInstance],
   );
 
   /**
@@ -246,7 +246,7 @@ export function useOrthanc(
         return null;
       }
     },
-    [getAxiosInstance]
+    [getAxiosInstance],
   );
 
   return {
