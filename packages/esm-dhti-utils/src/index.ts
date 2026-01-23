@@ -10,6 +10,7 @@
 // Hooks
 export { usePatient } from './hooks/usePatient';
 export { useDhti } from './hooks/useDhti';
+export { useOrthanc, type OrthancImage, type UploadImageParams } from './hooks/useOrthanc';
 
 // Models
 export { CDSHookCard, CDSHookCardSource, CDSHookCardLink, type CDSHookCardIndicator } from './models/card';

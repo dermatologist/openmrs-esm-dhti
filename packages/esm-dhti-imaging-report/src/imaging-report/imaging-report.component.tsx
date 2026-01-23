@@ -1,8 +1,9 @@
 import React, { useState, useCallback } from 'react';
 import { useConfig } from '@openmrs/esm-framework';
-import { Button, TextArea, Stack, InlineLoading } from '@carbon/react';
+import { Button, TextArea, Stack, InlineLoading, Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
 import { Camera, Send } from '@carbon/icons-react';
 import { ScreenCapture, type ScreenCaptureResult, useDhti } from '@openmrs/esm-dhti-utils';
+import { OrthancViewer } from './orthanc-viewer.component';
 import type { Config } from '../config-schema';
 import styles from './imaging-report.scss';
 
@@ -20,7 +21,8 @@ interface ImagingReportWidgetProps {
  * This component provides GenAI-powered imaging analysis and reporting capabilities.
  * It allows users to:
  * - Capture screen areas or extract image URLs using the ScreenCapture component
- * - Ask queries about the captured images
+ * - Upload and view DICOM images from an Orthanc server
+ * - Ask queries about the captured/selected images
  * - Submit the image and query to the DHTI backend for AI-powered analysis
  * - Display the GenAI-generated response
  * 
@@ -33,6 +35,7 @@ const ImagingReportWidget: React.FC<ImagingReportWidgetProps> = ({ patientUuid }
   // Component state
   const [isCapturing, setIsCapturing] = useState(false);
   const [capturedImageUrl, setCapturedImageUrl] = useState<string | null>(null);
+  const [imageSource, setImageSource] = useState<'capture' | 'orthanc'>('capture');
   const [query, setQuery] = useState('');
   const [response, setResponse] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -59,12 +62,23 @@ const ImagingReportWidget: React.FC<ImagingReportWidgetProps> = ({ patientUuid }
       }
       
       setCapturedImageUrl(result.imageData);
+      setImageSource('capture');
     } else if (result.type === 'image-url' && result.imageUrl) {
       setCapturedImageUrl(result.imageUrl);
+      setImageSource('capture');
     }
 
     setIsCapturing(false);
   }, [config.maxImageSize]);
+
+  /**
+   * Handle image selection from Orthanc viewer
+   */
+  const handleOrthancImageSelect = useCallback((imageUrl: string) => {
+    setCapturedImageUrl(imageUrl);
+    setImageSource('orthanc');
+    setError(null);
+  }, []);
 
   /**
    * Handle form submission - send image and query to DHTI backend
@@ -132,30 +146,58 @@ const ImagingReportWidget: React.FC<ImagingReportWidgetProps> = ({ patientUuid }
     <div className={styles.container}>
       <h3 className={styles.title}>{config.dhtiTitle}</h3>
 
-      {/* Screen Capture Section */}
-      {config.enableScreenCapture && (
-        <div className={styles.captureSection}>
-          <Button
-            kind="tertiary"
-            size="md"
-            renderIcon={Camera}
-            onClick={() => setIsCapturing(true)}
-            disabled={isCapturing || loading}
-          >
-            {capturedImageUrl ? 'Recapture Image' : 'Capture Image'}
-          </Button>
+      {/* Tabbed interface for image selection */}
+      <Tabs>
+        <TabList aria-label="Image selection methods">
+          <Tab>Screen Capture</Tab>
+          <Tab>DICOM Viewer</Tab>
+        </TabList>
+        
+        <TabPanels>
+          {/* Screen Capture Tab */}
+          <TabPanel>
+            {config.enableScreenCapture && (
+              <div className={styles.captureSection}>
+                <Button
+                  kind="tertiary"
+                  size="md"
+                  renderIcon={Camera}
+                  onClick={() => setIsCapturing(true)}
+                  disabled={isCapturing || loading}
+                >
+                  {capturedImageUrl && imageSource === 'capture' ? 'Recapture Image' : 'Capture Image'}
+                </Button>
 
-          {capturedImageUrl && (
-            <div className={styles.imagePreview}>
-              <img 
-                src={capturedImageUrl} 
-                alt="Captured medical image" 
-                className={styles.previewImage}
+                {capturedImageUrl && imageSource === 'capture' && (
+                  <div className={styles.imagePreview}>
+                    <img 
+                      src={capturedImageUrl} 
+                      alt="Captured medical image" 
+                      className={styles.previewImage}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+          </TabPanel>
+
+          {/* Orthanc DICOM Viewer Tab */}
+          <TabPanel>
+            {patientUuid && (
+              <OrthancViewer
+                patientId={patientUuid}
+                orthancUrl={config.orthancUrl}
+                onImageSelect={handleOrthancImageSelect}
               />
-            </div>
-          )}
-        </div>
-      )}
+            )}
+            {!patientUuid && (
+              <div className={styles.errorSection}>
+                <p className={styles.errorText}>Patient context not available</p>
+              </div>
+            )}
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
 
       {/* Query Input Section */}
       {capturedImageUrl && (

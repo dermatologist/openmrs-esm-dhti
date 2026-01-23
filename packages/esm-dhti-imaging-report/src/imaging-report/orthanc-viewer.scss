@@ -1,0 +1,152 @@
+@use '@carbon/colors';
+@use '@carbon/layout';
+@use '@carbon/type';
+
+.container {
+  padding: layout.$spacing-05;
+  background-color: colors.$white;
+  border: 1px solid colors.$gray-30;
+  border-radius: 4px;
+  margin-bottom: layout.$spacing-05;
+}
+
+.title {
+  @include type.type-style('productive-heading-02');
+  margin-bottom: layout.$spacing-04;
+  color: colors.$gray-100;
+}
+
+.sectionTitle {
+  @include type.type-style('productive-heading-01');
+  margin-bottom: layout.$spacing-03;
+  color: colors.$gray-90;
+}
+
+.canvasContainer {
+  position: relative;
+  width: 100%;
+  min-height: 300px;
+  background-color: colors.$gray-10;
+  border: 1px solid colors.$gray-30;
+  border-radius: 4px;
+  margin-bottom: layout.$spacing-04;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+
+.canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.emptyState {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: colors.$gray-60;
+  
+  p {
+    @include type.type-style('body-short-01');
+  }
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: layout.$spacing-03;
+  margin-bottom: layout.$spacing-04;
+}
+
+.imageCounter {
+  @include type.type-style('body-short-01');
+  color: colors.$gray-70;
+  min-width: 60px;
+  text-align: center;
+}
+
+.metadata {
+  background-color: colors.$gray-10;
+  padding: layout.$spacing-03;
+  border-radius: 4px;
+  margin-bottom: layout.$spacing-05;
+  
+  p {
+    @include type.type-style('body-short-01');
+    margin: layout.$spacing-02 0;
+    color: colors.$gray-90;
+    
+    &:first-child {
+      margin-top: 0;
+    }
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    strong {
+      color: colors.$gray-100;
+    }
+  }
+}
+
+.uploadSection {
+  border-top: 1px solid colors.$gray-30;
+  padding-top: layout.$spacing-05;
+  margin-top: layout.$spacing-05;
+}
+
+.fileInput {
+  display: flex;
+  align-items: center;
+  gap: layout.$spacing-03;
+  margin-bottom: layout.$spacing-04;
+}
+
+.fileName {
+  @include type.type-style('body-short-01');
+  color: colors.$gray-70;
+}
+
+.uploadForm {
+  margin-top: layout.$spacing-04;
+}
+
+.loadingSection {
+  display: flex;
+  justify-content: center;
+  margin: layout.$spacing-04 0;
+}
+
+.successMessage {
+  margin-top: layout.$spacing-04;
+  padding: layout.$spacing-03;
+  background-color: colors.$green-10;
+  border-left: 4px solid colors.$green-60;
+  border-radius: 4px;
+  
+  p {
+    @include type.type-style('body-short-01');
+    color: colors.$green-70;
+    margin: 0;
+  }
+}
+
+.errorMessage {
+  margin-top: layout.$spacing-04;
+  padding: layout.$spacing-03;
+  background-color: colors.$red-10;
+  border-left: 4px solid colors.$red-60;
+  border-radius: 4px;
+  
+  p {
+    @include type.type-style('body-short-01');
+    color: colors.$red-70;
+    margin: 0;
+  }
+}
