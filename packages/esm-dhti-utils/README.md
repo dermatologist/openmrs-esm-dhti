@@ -29,27 +29,57 @@ function PatientSearch() {
 }
 ```
 
-#### `useDhti()`
+#### `useOrthanc(orthancUrl, username?, password?)`
 
-A custom hook to interact with DHTI CDS Hooks services. It manages the submission of messages and handles loading/error states.
+A custom hook to interact with Orthanc DICOM servers. It provides functionality to upload PNG images as DICOM files, fetch patient images, and navigate through medical imaging data.
 
 **Example:**
 ```typescript
-import { useDhti } from '@openmrs/esm-dhti-utils';
+import { useOrthanc } from '@openmrs/esm-dhti-utils';
 
-function DhtiComponent() {
-  const { submitMessage, loading, error } = useDhti();
+function DicomComponent() {
+  const { uploadImage, fetchPatientImages, loading, error } = useOrthanc('http://localhost:8042');
 
-  const handleSubmit = async () => {
-    const result = await submitMessage('Patient symptoms', 'dhti_service', 'patient-123');
+  const handleUpload = async () => {
+    const result = await uploadImage({
+      imageData: 'data:image/png;base64,...',
+      patientId: 'patient-123',
+      patientName: 'John Doe',
+      studyDescription: 'Chest X-Ray',
+    });
     if (result) {
-      console.log('Response:', result.summary);
+      console.log('Upload successful:', result.id);
     }
   };
 
-  return <button onClick={handleSubmit} disabled={loading}>Submit</button>;
+  const handleFetch = async () => {
+    const images = await fetchPatientImages('patient-123');
+    console.log('Found images:', images.length);
+  };
+
+  return (
+    <div>
+      <button onClick={handleUpload} disabled={loading}>Upload Image</button>
+      <button onClick={handleFetch} disabled={loading}>Fetch Images</button>
+      {error && <p>Error: {error.message}</p>}
+    </div>
+  );
 }
 ```
+
+**API:**
+- `uploadImage(params)`: Upload PNG image as DICOM file
+- `fetchPatientImages(patientId)`: Fetch all images for a patient
+- `fetchInstanceById(instanceId)`: Fetch a specific DICOM instance
+- `loading`: Boolean indicating loading state
+- `error`: Error object if operation fails
+
+**Orthanc REST API Integration:**
+- Uses `/tools/create-dicom` for PNG to DICOM conversion
+- Uses `/tools/find` for patient image search
+- Uses `/instances/{id}/preview` for image retrieval
+
+
 
 ### Components
 
