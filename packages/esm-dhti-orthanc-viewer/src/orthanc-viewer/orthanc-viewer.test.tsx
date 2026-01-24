@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { OrthancViewer } from './orthanc-viewer.component';
+import { OrthancViewer } from './orthanc-viewer-core.component';
 import { useOrthanc } from '@openmrs/esm-dhti-utils';
 
 // Mock the useOrthanc hook
