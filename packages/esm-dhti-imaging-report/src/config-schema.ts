@@ -3,7 +3,7 @@ import { Type } from '@openmrs/esm-framework';
 /**
  * This is the config schema for the imaging report module.
  * It defines the configuration options that can be set for this module.
- * 
+ *
  * Configuration options:
  * - dhtiTitle: Title for the imaging report widget
  * - dhtiRoute: DHTI service endpoint URL for imaging report analysis
@@ -36,7 +36,7 @@ export const configSchema = {
   },
   orthancUrl: {
     _type: Type.String,
-    _default: 'http://localhost:8042',
+    _default: 'http://localhost:8010/http://orthanc:8042',
     _description: 'Base URL of the Orthanc DICOM server',
   },
   orthancUsername: {

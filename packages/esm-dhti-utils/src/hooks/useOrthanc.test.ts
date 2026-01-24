@@ -7,7 +7,7 @@ jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('useOrthanc', () => {
-  const mockOrthancUrl = 'http://localhost:8042';
+  const mockOrthancUrl = 'http://localhost:8010/http://orthanc:8042';
   let mockAxiosInstance: any;
 
   beforeEach(() => {

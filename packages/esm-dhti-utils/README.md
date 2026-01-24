@@ -38,7 +38,7 @@ A custom hook to interact with Orthanc DICOM servers. It provides functionality 
 import { useOrthanc } from '@openmrs/esm-dhti-utils';
 
 function DicomComponent() {
-  const { uploadImage, fetchPatientImages, loading, error } = useOrthanc('http://localhost:8042');
+  const { uploadImage, fetchPatientImages, loading, error } = useOrthanc('http://localhost:8010/http://orthanc:8042');
 
   const handleUpload = async () => {
     const result = await uploadImage({
@@ -126,8 +126,8 @@ function MyComponent() {
   return (
     <div>
       <button onClick={() => setIsCapturing(true)}>Start Screen Capture</button>
-      <ScreenCapture 
-        isActive={isCapturing} 
+      <ScreenCapture
+        isActive={isCapturing}
         onCapture={handleCapture}
         onCancel={() => setIsCapturing(false)}
       />

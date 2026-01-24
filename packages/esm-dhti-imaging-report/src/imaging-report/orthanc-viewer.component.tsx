@@ -27,7 +27,7 @@ export interface OrthancViewerProps {
  * ```tsx
  * <OrthancViewer
  *   patientId="patient-123"
- *   orthancUrl="http://localhost:8042"
+ *   orthancUrl="http://localhost:8010/http://orthanc:8042"
  *   onImageSelect={(url) => console.log('Selected:', url)}
  * />
  * ```

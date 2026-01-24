@@ -51,7 +51,7 @@ The Imaging Report widget is displayed in the patient chart's imaging dashboard 
     "dhtiRoute": "http://localhost:8001/langserve/dhti_elixir_imaging_report/cds-services/dhti-service",
     "enableScreenCapture": true,
     "maxImageSize": 5242880,
-    "orthancUrl": "http://localhost:8042",
+    "orthancUrl": "http://localhost:8010/http://orthanc:8042",
     "orthancUsername": "",
     "orthancPassword": ""
   }
@@ -64,7 +64,7 @@ The Imaging Report widget is displayed in the patient chart's imaging dashboard 
 - `dhtiRoute` (string): DHTI service endpoint URL for imaging analysis
 - `enableScreenCapture` (boolean): Enable or disable screen capture functionality. Default: true
 - `maxImageSize` (number): Maximum allowed image size in bytes. Default: 5242880 (5 MB)
-- `orthancUrl` (string): Base URL of the Orthanc DICOM server. Default: "http://localhost:8042"
+- `orthancUrl` (string): Base URL of the Orthanc DICOM server. Default: "http://localhost:8010/http://orthanc:8042"
 - `orthancUsername` (string): Optional username for Orthanc authentication
 - `orthancPassword` (string): Optional password for Orthanc authentication
 
@@ -177,7 +177,7 @@ import { OrthancViewer } from './orthanc-viewer.component';
 
 <OrthancViewer
   patientId="patient-123"
-  orthancUrl="http://localhost:8042"
+  orthancUrl="http://localhost:8010/http://orthanc:8042"
   onImageSelect={(imageUrl) => console.log('Selected:', imageUrl)}
 />
 ```
@@ -262,7 +262,7 @@ yarn typescript
 ### No images found for patient
 - Verify patient ID matches Orthanc records
 - Check that images were uploaded with correct Patient ID
-- Use Orthanc Explorer (http://localhost:8042/app/explorer.html) to verify
+- Use Orthanc Explorer (http://localhost:8010/http://orthanc:8042/app/explorer.html) to verify
 
 ### Screen capture not working
 - Check that `enableScreenCapture` is true

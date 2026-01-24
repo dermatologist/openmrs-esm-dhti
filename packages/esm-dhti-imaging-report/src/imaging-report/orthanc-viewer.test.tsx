@@ -17,7 +17,7 @@ describe('OrthancViewer', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     mockUseOrthanc.mockReturnValue({
       uploadImage: mockUploadImage,
       fetchPatientImages: mockFetchPatientImages,
@@ -37,11 +37,11 @@ describe('OrthancViewer', () => {
   describe('Component rendering', () => {
     it('should render the component with title', () => {
       mockFetchPatientImages.mockResolvedValue([]);
-      
+
       render(
         <OrthancViewer
           patientId="patient-123"
-          orthancUrl="http://localhost:8042"
+          orthancUrl="http://localhost:8010/http://orthanc:8042"
         />
       );
 
@@ -50,11 +50,11 @@ describe('OrthancViewer', () => {
 
     it('should show empty state when no images available', async () => {
       mockFetchPatientImages.mockResolvedValue([]);
-      
+
       render(
         <OrthancViewer
           patientId="patient-123"
-          orthancUrl="http://localhost:8042"
+          orthancUrl="http://localhost:8010/http://orthanc:8042"
         />
       );
 
@@ -65,11 +65,11 @@ describe('OrthancViewer', () => {
 
     it('should render upload section', () => {
       mockFetchPatientImages.mockResolvedValue([]);
-      
+
       render(
         <OrthancViewer
           patientId="patient-123"
-          orthancUrl="http://localhost:8042"
+          orthancUrl="http://localhost:8010/http://orthanc:8042"
         />
       );
 
@@ -95,7 +95,7 @@ describe('OrthancViewer', () => {
       render(
         <OrthancViewer
           patientId="patient-123"
-          orthancUrl="http://localhost:8042"
+          orthancUrl="http://localhost:8010/http://orthanc:8042"
           onImageSelect={mockOnImageSelect}
         />
       );
@@ -125,7 +125,7 @@ describe('OrthancViewer', () => {
       render(
         <OrthancViewer
           patientId="patient-123"
-          orthancUrl="http://localhost:8042"
+          orthancUrl="http://localhost:8010/http://orthanc:8042"
         />
       );
 
@@ -156,7 +156,7 @@ describe('OrthancViewer', () => {
       render(
         <OrthancViewer
           patientId="patient-123"
-          orthancUrl="http://localhost:8042"
+          orthancUrl="http://localhost:8010/http://orthanc:8042"
         />
       );
 
@@ -189,16 +189,16 @@ describe('OrthancViewer', () => {
       render(
         <OrthancViewer
           patientId="patient-123"
-          orthancUrl="http://localhost:8042"
+          orthancUrl="http://localhost:8010/http://orthanc:8042"
         />
       );
 
       // Create a mock file
       const file = new File(['image content'], 'test.png', { type: 'image/png' });
-      
+
       // Get the hidden file input
       const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-      
+
       // Mock FileReader
       const mockFileReader = {
         readAsDataURL: jest.fn(),
@@ -232,7 +232,7 @@ describe('OrthancViewer', () => {
       const { container } = render(
         <OrthancViewer
           patientId="patient-123"
-          orthancUrl="http://localhost:8042"
+          orthancUrl="http://localhost:8010/http://orthanc:8042"
         />
       );
 
@@ -277,7 +277,7 @@ describe('OrthancViewer', () => {
       render(
         <OrthancViewer
           patientId="patient-123"
-          orthancUrl="http://localhost:8042"
+          orthancUrl="http://localhost:8010/http://orthanc:8042"
         />
       );
 
@@ -339,7 +339,7 @@ describe('OrthancViewer', () => {
       render(
         <OrthancViewer
           patientId="patient-123"
-          orthancUrl="http://localhost:8042"
+          orthancUrl="http://localhost:8010/http://orthanc:8042"
         />
       );
 
@@ -384,7 +384,7 @@ describe('OrthancViewer', () => {
       render(
         <OrthancViewer
           patientId="patient-123"
-          orthancUrl="http://localhost:8042"
+          orthancUrl="http://localhost:8010/http://orthanc:8042"
         />
       );
 
@@ -409,7 +409,7 @@ describe('OrthancViewer', () => {
       render(
         <OrthancViewer
           patientId="patient-123"
-          orthancUrl="http://localhost:8042"
+          orthancUrl="http://localhost:8010/http://orthanc:8042"
         />
       );
 
@@ -459,7 +459,7 @@ describe('OrthancViewer', () => {
       render(
         <OrthancViewer
           patientId="patient-123"
-          orthancUrl="http://localhost:8042"
+          orthancUrl="http://localhost:8010/http://orthanc:8042"
         />
       );
 
@@ -485,7 +485,7 @@ describe('OrthancViewer', () => {
       render(
         <OrthancViewer
           patientId="patient-123"
-          orthancUrl="http://localhost:8042"
+          orthancUrl="http://localhost:8010/http://orthanc:8042"
           onImageSelect={mockOnImageSelect}
         />
       );

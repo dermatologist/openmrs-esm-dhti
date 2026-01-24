@@ -44,13 +44,13 @@ export interface UploadImageParams {
  * - Fetch images for a given patient
  * - Navigate through patient images
  *
- * @param orthancUrl - Base URL of the Orthanc server (default: http://localhost:8042)
+ * @param orthancUrl - Base URL of the Orthanc server (default: http://localhost:8010/http://orthanc:8042)
  * @param username - Optional username for basic auth
  * @param password - Optional password for basic auth
  *
  * @example
  * ```tsx
- * const { uploadImage, fetchPatientImages, loading, error } = useOrthanc('http://localhost:8042');
+ * const { uploadImage, fetchPatientImages, loading, error } = useOrthanc('http://localhost:8010/http://orthanc:8042');
  *
  * const handleUpload = async () => {
  *   const result = await uploadImage({
@@ -65,7 +65,11 @@ export interface UploadImageParams {
  * };
  * ```
  */
-export function useOrthanc(orthancUrl: string = 'http://localhost:8042', username?: string, password?: string) {
+export function useOrthanc(
+  orthancUrl: string = 'http://localhost:8010/http://orthanc:8042',
+  username?: string,
+  password?: string,
+) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
