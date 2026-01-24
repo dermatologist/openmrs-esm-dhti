@@ -3,7 +3,7 @@ import { Type } from '@openmrs/esm-framework';
 /**
  * This is the config schema for the Orthanc viewer module.
  * It defines the configuration options that can be set for this module.
- * 
+ *
  * Configuration options:
  * - orthancUrl: Base URL of the Orthanc DICOM server
  * - orthancUsername: Optional username for Orthanc authentication
@@ -12,7 +12,7 @@ import { Type } from '@openmrs/esm-framework';
 export const configSchema = {
   orthancUrl: {
     _type: Type.String,
-    _default: 'http://localhost:8042',
+    _default: 'http://localhost:8010/http://orthanc:8042',
     _description: 'Base URL of the Orthanc DICOM server',
   },
   orthancUsername: {
