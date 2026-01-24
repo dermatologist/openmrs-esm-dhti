@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import axios from 'axios';
 
 function arrayBufferToBase64(data: ArrayBuffer | Uint8Array): string {
@@ -74,10 +74,10 @@ export function useOrthanc(
   const [error, setError] = useState<Error | null>(null);
 
   /**
-   * Create axios instance with optional authentication
-   * Uses text/plain Content-Type to avoid CORS preflight OPTIONS requests
+   * Memoize axios instances to prevent recreation on every render
+   * This prevents infinite loops in components that depend on these instances
    */
-  const getAxiosInstance = useCallback(() => {
+  const axiosInstance = useMemo(() => {
     const config: any = {
       baseURL: orthancUrl,
       headers: {
@@ -102,12 +102,12 @@ export function useOrthanc(
     return axios.create(config);
   }, [orthancUrl, username, password]);
 
-  const getBinaryAxiosInstance = useCallback(() => {
-    const instance = axios.create({ baseURL: orthancUrl });
+  const binaryAxiosInstance = useMemo(() => {
+    const config: any = { baseURL: orthancUrl };
     if (username && password) {
-      instance.defaults.auth = { username, password };
+      config.auth = { username, password };
     }
-    return instance;
+    return axios.create(config);
   }, [orthancUrl, username, password]);
 
   /**
@@ -121,8 +121,6 @@ export function useOrthanc(
       setError(null);
 
       try {
-        const axiosInstance = getAxiosInstance();
-
         // Extract base64 data from data URL
         let base64Data = params.imageData;
         if (base64Data.startsWith('data:image/png;base64,')) {
@@ -169,13 +167,14 @@ export function useOrthanc(
         return null;
       }
     },
-    [getAxiosInstance],
+    [axiosInstance],
   );
 
   /**
    * Fetch all images for a given patient ID
    *
    * Uses the /tools/find endpoint to search for patient images
+   * Limits prefetch to the last 10 images for performance
    */
   const fetchPatientImages = useCallback(
     async (patientId: string): Promise<OrthancImage[]> => {
@@ -183,8 +182,6 @@ export function useOrthanc(
       setError(null);
 
       try {
-        const axiosInstance = getAxiosInstance();
-
         // Use /tools/find to search for patient
         const findResponse = await axiosInstance.post('/tools/find', {
           Level: 'Instance',
@@ -194,7 +191,12 @@ export function useOrthanc(
           Expand: true,
         });
 
-        const instances = Array.isArray(findResponse.data) ? findResponse.data : [];
+        let instances = Array.isArray(findResponse.data) ? findResponse.data : [];
+
+        // Limit to last 10 images for performance
+        if (instances.length > 10) {
+          instances = instances.slice(-10);
+        }
 
         // Fetch details and preview for each instance
         const images: OrthancImage[] = [];
@@ -221,10 +223,8 @@ export function useOrthanc(
               console.warn(`Failed to get study details for ${instanceId}:`, err);
             }
 
-            // Fetch preview image (PNG format) with a separate non-transforming instance
-            const binaryAxios = getBinaryAxiosInstance();
-
-            const previewResponse = await binaryAxios.get(`/instances/${instanceId}/preview`, {
+            // Fetch preview image (PNG format)
+            const previewResponse = await binaryAxiosInstance.get(`/instances/${instanceId}/preview`, {
               responseType: 'arraybuffer',
               transformResponse: [(data) => data], // Disable default JSON parsing
             });
@@ -263,7 +263,7 @@ export function useOrthanc(
         return [];
       }
     },
-    [getAxiosInstance, getBinaryAxiosInstance],
+    [axiosInstance, binaryAxiosInstance],
   );
 
   /**
@@ -275,16 +275,12 @@ export function useOrthanc(
       setError(null);
 
       try {
-        const axiosInstance = getAxiosInstance();
-
         // Get instance details
         const instanceResponse = await axiosInstance.get(`/instances/${instanceId}`);
         const tags = instanceResponse.data.MainDicomTags || {};
 
-        // Fetch preview image with separate plain axios (no transform)
-        const binaryAxios = getBinaryAxiosInstance();
-
-        const previewResponse = await binaryAxios.get(`/instances/${instanceId}/preview`, {
+        // Fetch preview image
+        const previewResponse = await binaryAxiosInstance.get(`/instances/${instanceId}/preview`, {
           responseType: 'arraybuffer',
           transformResponse: [(data) => data],
         });
@@ -310,7 +306,7 @@ export function useOrthanc(
         return null;
       }
     },
-    [getAxiosInstance, getBinaryAxiosInstance],
+    [axiosInstance, binaryAxiosInstance],
   );
 
   /**
@@ -322,7 +318,6 @@ export function useOrthanc(
       setError(null);
 
       try {
-        const axiosInstance = getAxiosInstance();
         await axiosInstance.delete(`/instances/${instanceId}`);
         setLoading(false);
         return true;
@@ -338,7 +333,7 @@ export function useOrthanc(
         return false;
       }
     },
-    [getAxiosInstance],
+    [axiosInstance],
   );
 
   return {
