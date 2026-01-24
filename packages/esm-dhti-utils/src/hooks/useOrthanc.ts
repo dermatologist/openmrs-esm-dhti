@@ -14,23 +14,6 @@ function arrayBufferToBase64(data: ArrayBuffer | Uint8Array): string {
   return btoa(binary);
 }
 
-function parsePossiblyJsonResponse(data: unknown): any {
-  if (data == null || data === '') {
-    return undefined;
-  }
-  if (typeof data === 'object') {
-    return data;
-  }
-  if (typeof data === 'string') {
-    try {
-      return JSON.parse(data);
-    } catch {
-      return undefined;
-    }
-  }
-  return undefined;
-}
-
 /**
  * Orthanc DICOM Image metadata
  */
@@ -88,17 +71,19 @@ export function useOrthanc(orthancUrl: string = 'http://localhost:8042', usernam
 
   /**
    * Create axios instance with optional authentication
+   * Uses text/plain Content-Type to avoid CORS preflight OPTIONS requests
    */
   const getAxiosInstance = useCallback(() => {
     const config: any = {
       baseURL: orthancUrl,
+      headers: {
+        'Content-Type': 'text/plain', // Avoid CORS preflight
+      },
+      responseType: 'json', // Ensure response is parsed as JSON
       transformRequest: [
         (data) => {
-          // Only transform JSON data, skip if already a string or undefined
-          if (typeof data === 'string' || data === undefined) {
-            return data;
-          }
-          return JSON.stringify(data);
+          // Manually stringify to send as text/plain
+          return typeof data === 'object' ? JSON.stringify(data) : data;
         },
       ],
     };
@@ -154,15 +139,10 @@ export function useOrthanc(orthancUrl: string = 'http://localhost:8042', usernam
         };
 
         // Upload to Orthanc using /tools/create-dicom endpoint
-        // Send as a "simple" CORS request to avoid preflight OPTIONS
-        const response = await axiosInstance.post('/tools/create-dicom', dicomData, {
-          headers: { 'Content-Type': 'text/plain' },
-        });
-
-        const parsed = parsePossiblyJsonResponse(response.data);
+        const response = await axiosInstance.post('/tools/create-dicom', dicomData);
 
         // Handle response - may return 200 with no content or with instance ID
-        const instanceId = parsed?.ID || `orthanc-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+        const instanceId = response.data?.ID || `orthanc-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
 
         setLoading(false);
 
@@ -173,6 +153,12 @@ export function useOrthanc(orthancUrl: string = 'http://localhost:8042', usernam
           studyDescription: params.studyDescription,
         };
       } catch (err) {
+        console.error('Upload error:', err);
+        if (axios.isAxiosError(err)) {
+          console.error('Response status:', err.response?.status);
+          console.error('Response data:', err.response?.data);
+          console.error('Response headers:', err.response?.headers);
+        }
         const error = err instanceof Error ? err : new Error('Failed to upload image to Orthanc');
         setError(error);
         setLoading(false);
@@ -195,18 +181,14 @@ export function useOrthanc(orthancUrl: string = 'http://localhost:8042', usernam
       try {
         const axiosInstance = getAxiosInstance();
 
-        // Use /tools/find to search for patient (send as simple request to avoid preflight)
-        const findResponse = await axiosInstance.post(
-          '/tools/find',
-          {
-            Level: 'Instance',
-            Query: {
-              PatientID: patientId,
-            },
-            Expand: true,
+        // Use /tools/find to search for patient
+        const findResponse = await axiosInstance.post('/tools/find', {
+          Level: 'Instance',
+          Query: {
+            PatientID: patientId,
           },
-          { headers: { 'Content-Type': 'text/plain' } },
-        );
+          Expand: true,
+        });
 
         const instances = Array.isArray(findResponse.data) ? findResponse.data : [];
 
@@ -264,6 +246,13 @@ export function useOrthanc(orthancUrl: string = 'http://localhost:8042', usernam
         setLoading(false);
         return images;
       } catch (err) {
+        console.error('Fetch patient images error:', err);
+        if (axios.isAxiosError(err)) {
+          console.error('Response status:', err.response?.status);
+          console.error('Response data:', err.response?.data);
+          console.error('Response headers:', err.response?.headers);
+          console.error('Request URL:', err.config?.url);
+        }
         const error = err instanceof Error ? err : new Error('Failed to fetch patient images from Orthanc');
         setError(error);
         setLoading(false);
