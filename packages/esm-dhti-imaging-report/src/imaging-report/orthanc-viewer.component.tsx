@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Button, TextInput, Stack, InlineLoading, FileUploader } from '@carbon/react';
-import { ChevronLeft, ChevronRight, Upload, FolderOpen } from '@carbon/react/icons';
+import { ChevronLeft, ChevronRight, Upload, FolderOpen, TrashCan } from '@carbon/react/icons';
 import { useOrthanc, type OrthancImage } from '@openmrs/esm-dhti-utils';
 import styles from './orthanc-viewer.scss';
 
@@ -37,7 +37,7 @@ export const OrthancViewer: React.FC<OrthancViewerProps> = ({
   orthancUrl,
   onImageSelect,
 }) => {
-  const { uploadImage, fetchPatientImages, loading, error } = useOrthanc(orthancUrl);
+  const { uploadImage, fetchPatientImages, deleteImage, loading, error } = useOrthanc(orthancUrl);
 
   // Component state
   const [images, setImages] = useState<OrthancImage[]>([]);
@@ -49,6 +49,9 @@ export const OrthancViewer: React.FC<OrthancViewerProps> = ({
   const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Compute current image early for use in handlers
+  const currentImage = images[currentIndex];
 
   /**
    * Display an image on the canvas
@@ -206,6 +209,43 @@ export const OrthancViewer: React.FC<OrthancViewerProps> = ({
   }, [images, currentIndex, displayImage]);
 
   /**
+   * Delete the current image
+   */
+  const handleDeleteImage = useCallback(async () => {
+    if (!currentImage) {
+      setUploadError('No image selected to delete');
+      return;
+    }
+
+    // Confirm deletion
+    const confirmed = window.confirm(
+      `Are you sure you want to delete this image?\n\nPatient: ${currentImage.patientName || currentImage.patientId}\nStudy: ${currentImage.studyDescription || 'N/A'}`
+    );
+
+    if (!confirmed) return;
+
+    setUploadError(null);
+    const success = await deleteImage(currentImage.id);
+
+    if (success) {
+      setUploadSuccess('Image deleted successfully');
+      // Remove from local list
+      const updatedImages = images.filter((_, idx) => idx !== currentIndex);
+      setImages(updatedImages);
+
+      if (updatedImages.length > 0) {
+        const nextIndex = Math.min(currentIndex, updatedImages.length - 1);
+        setCurrentIndex(nextIndex);
+        displayImage(updatedImages[nextIndex]);
+      } else {
+        setCurrentIndex(0);
+      }
+    } else {
+      setUploadError(error?.message || 'Failed to delete image');
+    }
+  }, [currentImage, images, currentIndex, deleteImage, error, displayImage]);
+
+  /**
    * Display current image from server
    */
   useEffect(() => {
@@ -213,8 +253,6 @@ export const OrthancViewer: React.FC<OrthancViewerProps> = ({
       displayImage(images[currentIndex]);
     }
   }, [currentIndex, images, displayImage]);
-
-  const currentImage = images[currentIndex];
 
   return (
     <div className={styles.container}>
@@ -255,6 +293,15 @@ export const OrthancViewer: React.FC<OrthancViewerProps> = ({
             iconDescription="Next"
             hasIconOnly
             onClick={handleNext}
+            disabled={loading}
+          />
+
+          <Button
+            kind="danger--ghost"
+            size="sm"
+            renderIcon={TrashCan}
+            iconDescription="Delete"
+            onClick={handleDeleteImage}
             disabled={loading}
           />
         </div>

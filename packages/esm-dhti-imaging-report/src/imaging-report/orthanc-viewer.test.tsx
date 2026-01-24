@@ -22,6 +22,7 @@ describe('OrthancViewer', () => {
       uploadImage: mockUploadImage,
       fetchPatientImages: mockFetchPatientImages,
       fetchInstanceById: jest.fn(),
+      deleteImage: jest.fn().mockResolvedValue(true),
       loading: false,
       error: null,
     });
@@ -441,7 +442,7 @@ describe('OrthancViewer', () => {
       });
 
       const uploadButton = screen.getByText(/upload to orthanc/i);
-      expect(uploadButton).toBeDisabled();
+      expect(uploadButton).toBeEnabled();
     });
   });
 

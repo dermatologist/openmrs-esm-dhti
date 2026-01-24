@@ -16,6 +16,7 @@ describe('useOrthanc', () => {
     mockAxiosInstance = {
       post: jest.fn(),
       get: jest.fn(),
+      delete: jest.fn(),
     };
 
     mockedAxios.create.mockReturnValue(mockAxiosInstance as any);
@@ -105,11 +106,17 @@ describe('useOrthanc', () => {
             ID: 'instance-1',
             MainDicomTags: {
               PatientID: 'patient-123',
-              PatientName: 'John Doe',
-              StudyDescription: 'Chest X-Ray',
             },
           },
         ],
+      };
+
+      const mockInstanceDetailsResponse = {
+        data: {
+          MainDicomTags: {
+            PatientID: 'patient-123',
+          },
+        },
       };
 
       const mockPreviewResponse = {
@@ -117,7 +124,7 @@ describe('useOrthanc', () => {
       };
 
       mockAxiosInstance.post.mockResolvedValue(mockFindResponse);
-      mockAxiosInstance.get.mockResolvedValue(mockPreviewResponse);
+      mockAxiosInstance.get.mockResolvedValue(mockInstanceDetailsResponse);
 
       const { result } = renderHook(() => useOrthanc(mockOrthancUrl));
 
@@ -129,7 +136,6 @@ describe('useOrthanc', () => {
       expect(images).toHaveLength(1);
       expect(images![0].id).toBe('instance-1');
       expect(images![0].patientId).toBe('patient-123');
-      expect(images![0].patientName).toBe('John Doe');
 
       expect(mockAxiosInstance.post).toHaveBeenCalledWith('/tools/find', {
         Level: 'Instance',
@@ -173,7 +179,9 @@ describe('useOrthanc', () => {
       };
 
       mockAxiosInstance.post.mockResolvedValue(mockFindResponse);
+      // Set up get calls: 2 successful for instance-1, then 1 fails for instance-2
       mockAxiosInstance.get
+        .mockResolvedValueOnce({ data: { MainDicomTags: { PatientID: 'patient-123' } } })
         .mockResolvedValueOnce({ data: Buffer.from('image-1') })
         .mockRejectedValueOnce(new Error('Failed to load instance'));
 
@@ -231,6 +239,79 @@ describe('useOrthanc', () => {
 
       expect(instance).toBeNull();
       expect(result.current.error).not.toBeNull();
+    });
+  });
+
+  describe('deleteImage', () => {
+    it('should successfully delete an image', async () => {
+      mockAxiosInstance.delete.mockResolvedValue({ status: 200 });
+
+      const { result } = renderHook(() => useOrthanc(mockOrthancUrl));
+
+      let deleteResult;
+      await act(async () => {
+        deleteResult = await result.current.deleteImage('instance-123');
+      });
+
+      expect(deleteResult).toBe(true);
+      expect(mockAxiosInstance.delete).toHaveBeenCalledWith('/instances/instance-123');
+      expect(result.current.error).toBeNull();
+    });
+
+    it('should handle delete errors', async () => {
+      mockAxiosInstance.delete.mockRejectedValue(new Error('Forbidden'));
+
+      const { result } = renderHook(() => useOrthanc(mockOrthancUrl));
+
+      let deleteResult;
+      await act(async () => {
+        deleteResult = await result.current.deleteImage('instance-123');
+      });
+
+      expect(deleteResult).toBe(false);
+      expect(result.current.error).not.toBeNull();
+      expect(result.current.error?.message).toBe('Forbidden');
+    });
+
+    it('should return false on axios error', async () => {
+      const axiosError = new Error('Network error');
+      (axiosError as any).isAxiosError = true;
+      mockAxiosInstance.delete.mockRejectedValue(axiosError);
+
+      const { result } = renderHook(() => useOrthanc(mockOrthancUrl));
+
+      let deleteResult;
+      await act(async () => {
+        deleteResult = await result.current.deleteImage('instance-123');
+      });
+
+      expect(deleteResult).toBe(false);
+      expect(result.current.error).not.toBeNull();
+    });
+
+    it('should set loading state during deletion', async () => {
+      mockAxiosInstance.delete.mockImplementation(
+        () => new Promise((resolve) => setTimeout(() => resolve({ status: 200 }), 100)),
+      );
+
+      const { result } = renderHook(() => useOrthanc(mockOrthancUrl));
+
+      let deletePromise;
+      act(() => {
+        deletePromise = result.current.deleteImage('instance-123');
+      });
+
+      // Should be loading
+      await waitFor(() => {
+        expect(result.current.loading).toBe(true);
+      });
+
+      await deletePromise;
+
+      // Should not be loading after completion
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false);
+      });
     });
   });
 

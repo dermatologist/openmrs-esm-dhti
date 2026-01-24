@@ -313,10 +313,39 @@ export function useOrthanc(
     [getAxiosInstance, getBinaryAxiosInstance],
   );
 
+  /**
+   * Delete a specific instance from Orthanc
+   */
+  const deleteImage = useCallback(
+    async (instanceId: string): Promise<boolean> => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const axiosInstance = getAxiosInstance();
+        await axiosInstance.delete(`/instances/${instanceId}`);
+        setLoading(false);
+        return true;
+      } catch (err) {
+        console.error('Delete image error:', err);
+        if (axios.isAxiosError(err)) {
+          console.error('Response status:', err.response?.status);
+          console.error('Response data:', err.response?.data);
+        }
+        const error = err instanceof Error ? err : new Error('Failed to delete image from Orthanc');
+        setError(error);
+        setLoading(false);
+        return false;
+      }
+    },
+    [getAxiosInstance],
+  );
+
   return {
     uploadImage,
     fetchPatientImages,
     fetchInstanceById,
+    deleteImage,
     loading,
     error,
   };
