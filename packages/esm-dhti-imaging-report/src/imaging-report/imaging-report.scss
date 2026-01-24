@@ -1,0 +1,93 @@
+@use '@carbon/colors';
+@use '@carbon/layout';
+@use '@carbon/type';
+
+.container {
+  padding: layout.$spacing-05;
+  background-color: colors.$white;
+  border-radius: 4px;
+}
+
+.title {
+  @include type.type-style('productive-heading-03');
+  margin-bottom: layout.$spacing-05;
+  color: colors.$gray-100;
+}
+
+.captureSection {
+  margin-bottom: layout.$spacing-05;
+}
+
+.imagePreview {
+  margin-top: layout.$spacing-04;
+  border: 1px solid colors.$gray-30;
+  border-radius: 4px;
+  padding: layout.$spacing-03;
+  background-color: colors.$gray-10;
+}
+
+.previewImage {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 2px;
+}
+
+.querySection {
+  margin-bottom: layout.$spacing-05;
+}
+
+.actionButtons {
+  margin-top: layout.$spacing-04;
+}
+
+.loadingSection {
+  margin: layout.$spacing-05 0;
+  display: flex;
+  justify-content: center;
+}
+
+.errorSection {
+  margin: layout.$spacing-05 0;
+  padding: layout.$spacing-04;
+  background-color: colors.$red-10;
+  border-left: 4px solid colors.$red-60;
+  border-radius: 4px;
+}
+
+.errorText {
+  @include type.type-style('body-short-01');
+  color: colors.$red-70;
+  margin: 0;
+}
+
+.responseSection {
+  margin-top: layout.$spacing-05;
+  padding: layout.$spacing-04;
+  background-color: colors.$blue-10;
+  border-left: 4px solid colors.$blue-60;
+  border-radius: 4px;
+}
+
+.responseTitle {
+  @include type.type-style('productive-heading-02');
+  margin-bottom: layout.$spacing-03;
+  color: colors.$blue-70;
+}
+
+.responseContent {
+  @include type.type-style('body-short-01');
+  color: colors.$gray-100;
+  
+  p {
+    margin: layout.$spacing-02 0;
+    
+    &:first-child {
+      margin-top: 0;
+    }
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

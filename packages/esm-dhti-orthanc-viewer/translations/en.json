@@ -1,0 +1,19 @@
+{
+  "orthancViewer": "Orthanc DICOM Viewer",
+  "openImageFile": "Open Image File",
+  "patientName": "Patient Name",
+  "studyDescription": "Study Description",
+  "uploadToOrthanc": "Upload to Orthanc",
+  "uploadNewImage": "Upload New Image",
+  "previous": "Previous",
+  "next": "Next",
+  "noImagesAvailable": "No images available. Upload an image to get started.",
+  "analyzing": "Analyzing...",
+  "uploadSuccess": "Image uploaded successfully",
+  "uploadFailed": "Failed to upload image",
+  "patientContextNotAvailable": "Patient context not available",
+  "pleaseSelectImage": "Please select an image first",
+  "pleaseEnterPatientName": "Please enter a patient name",
+  "imageSizeExceeded": "Image size exceeds maximum allowed size",
+  "pleaseSelectPngImage": "Please select a PNG image file"
+}

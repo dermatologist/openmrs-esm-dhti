@@ -1,0 +1,18 @@
+{
+  "imagingReport": "Imaging Report",
+  "captureImage": "Capture Image",
+  "recaptureImage": "Recapture Image",
+  "askQuestion": "Ask a question about the image",
+  "questionPlaceholder": "e.g., What abnormalities can you identify in this imaging study?",
+  "submitQuery": "Submit Query",
+  "analyzing": "Analyzing...",
+  "clear": "Clear",
+  "analysisResult": "Analysis Result:",
+  "error": "Error:",
+  "analyzingImage": "Analyzing image...",
+  "captureFirst": "Please capture an image first",
+  "enterQuery": "Please enter a query about the image",
+  "patientContextNotAvailable": "Patient context not available",
+  "noResponse": "No response received from the analysis service",
+  "imageSizeExceeded": "Image size exceeds maximum allowed size"
+}

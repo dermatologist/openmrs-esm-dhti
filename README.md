@@ -45,6 +45,8 @@ This monorepo contains the following packages:
 - **[esm-generic-display](packages/esm-generic-display/README.md)** - Generic display widget for AI-powered insights
 - **[esm-starter-app](packages/esm-starter-app/README.md)** - Template application demonstrating OpenMRS ESM best practices
 - **[esm-dhti-upload](packages/esm-dhti-upload/README.md)** - Module for uploading files for RAG.
+- **[esm-dhti-imaging-report](packages/esm-dhti-imaging-report/README.md)** - GenAI-powered imaging report widget.
+- **[esm-dhti-orthanc-viewer](packages/esm-dhti-orthanc-viewer/README.md)** - Orthanc DICOM viewer integration (Dermatology/Pathology workflows in combination with imaging-report).
 
 ### Utilities
 
@@ -61,25 +63,37 @@ The monorepo is structured to reduce code duplication and promote code reuse:
 ```
 openmrs-esm-dhti/
 ├── packages/
-│   ├── esm-chatbot-agent/      # Conversational AI module
-│   ├── esm-generic-display/    # Display widget module
-│   ├── esm-starter-app/        # Template/starter module
-│   └── esm-dhti-utils/         # Shared utilities (NEW)
-│       ├── hooks/              # Reusable React hooks
-│       │   ├── usePatient.ts   # Patient search hook
-│       │   └── useDhti.ts      # DHTI service integration hook
-│       └── models/             # TypeScript models
-│           ├── card.ts         # CDS Hooks Card model
-│           └── request.ts      # CDS Hooks Request model
+│   ├── esm-chatbot-agent/         # Conversational AI interface
+│   ├── esm-generic-display/       # AI-powered display widget
+│   ├── esm-starter-app/           # Template/example app
+│   ├── esm-dhti-utils/            # Shared utilities (hooks, models)
+│   │   ├── hooks/                 # Reusable React hooks
+│   │   │   ├── usePatient.ts      # Patient search hook
+│   │   │   └── useDhti.ts         # DHTI service integration hook
+│   │   └── models/                # TypeScript models
+│   │       ├── card.ts            # CDS Hooks Card model
+│   │       └── request.ts         # CDS Hooks Request model
+│   ├── esm-dhti-upload/           # File upload for RAG
+│   ├── esm-dhti-imaging-report/   # GenAI imaging report widget
+│   └── esm-dhti-orthanc-viewer/   # Orthanc DICOM viewer integration
+│
+├── dhti-screen-grabber/           # Browser extension for screen capture
+│   ├── background.js
+│   ├── content.js
+│   ├── manifest.json
+│   └── ...
 └── ...
 ```
 
 ### Shared Utilities
 
 The `esm-dhti-utils` package provides:
-- **usePatient**: Hook for searching patients via FHIR API (supports name and identifier search)
-- **useDhti**: Hook for interacting with DHTI CDS Hooks services
-- **CDSHookCard/CDSHookRequest**: TypeScript models for CDS Hooks integration
+- **usePatient**: React hook for searching patients via FHIR API (by name or identifier)
+- **useDhti**: React hook for integrating with DHTI CDS Hooks services (AI/decision support)
+- **CDSHookCard**: TypeScript model for CDS Hooks response cards
+- **CDSHookRequest**: TypeScript model for CDS Hooks request payloads
+- **ScreenCapture**: Utility for capturing images for VLMs.
+- **useOrthanc**: React hook for interacting with Orthanc DICOM server.
 
 ## Give us a star ⭐️
 If you find this project useful, give us a star. It helps others discover the project.
@@ -88,7 +102,7 @@ If you find this project useful, give us a star. It helps others discover the pr
 
 REF: https://o3-docs.openmrs.org/docs/configure-o3/overview
 
-You can make changes to frontend module configurations through the built-in implementer tools panel. Once you log into OpenMRS, clicking the caret arrow centered at the bottom of the screen will pull up the implementer tools. Alternatively, you can click on the cog icon in the navbar. Once open, you can look up configuration properties by searching through the configuration and modify them on the fly. Note that any tweaks made to the configuration through the implementer tools will be lost once you refresh the page. To make permanent changes to the configuration, you will need to commit those changes to your module configuration. The implementer tools allow you to download a temporary config file containing your changes by clicking the Download config button. The standard easy approach to configuration overrides to frontend modules is to create a JSON configuration that you can paste into the json editor of the implementers tools. For example:
+You can make changes to frontend module configurations through the built-in implementer tools panel. Once you log into OpenMRS, clicking on the wrench  icon 🔧  in the top right navbar. Then you can click on the "Configuration tab" and add JSON as below. To make permanent changes to the configuration, you will need to commit those changes to your module configuration. The implementer tools allow you to download a temporary config file containing your changes by clicking the Download config button. The standard easy approach to configuration overrides to frontend modules is to create a JSON configuration that you can paste into the json editor of the implementers tools. For example:
 
 ```json
 {
@@ -97,8 +111,6 @@ You can make changes to frontend module configurations through the built-in impl
   }
 }
 ```
-
-
 
 ## Starting a dev server
 
