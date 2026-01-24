@@ -174,7 +174,7 @@ export function useOrthanc(
    * Fetch all images for a given patient ID
    *
    * Uses the /tools/find endpoint to search for patient images
-   * Limits prefetch to the last 10 images for performance
+   * Limits prefetch to the last 3 images for performance
    */
   const fetchPatientImages = useCallback(
     async (patientId: string): Promise<OrthancImage[]> => {
@@ -193,9 +193,9 @@ export function useOrthanc(
 
         let instances = Array.isArray(findResponse.data) ? findResponse.data : [];
 
-        // Limit to last 10 images for performance
-        if (instances.length > 10) {
-          instances = instances.slice(-10);
+        // Limit to last 3 images for performance
+        if (instances.length > 3) {
+          instances = instances.slice(-3);
         }
 
         // Fetch details and preview for each instance
@@ -223,6 +223,11 @@ export function useOrthanc(
               console.warn(`Failed to get study details for ${instanceId}:`, err);
             }
 
+            // Fallback: use tags from instance if study description not found
+            if (!studyDescription) {
+              studyDescription = tags.StudyDescription;
+            }
+
             // Fetch preview image (PNG format)
             const previewResponse = await binaryAxiosInstance.get(`/instances/${instanceId}/preview`, {
               responseType: 'arraybuffer',
@@ -237,7 +242,7 @@ export function useOrthanc(
               id: instanceId,
               patientId: tags.PatientID || patientId,
               patientName,
-              studyDescription: studyDescription || tags.StudyDescription,
+              studyDescription,
               instanceDate: tags.InstanceCreationDate,
               imageData,
             });

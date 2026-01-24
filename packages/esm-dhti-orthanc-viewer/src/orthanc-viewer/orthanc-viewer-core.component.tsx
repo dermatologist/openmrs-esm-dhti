@@ -54,7 +54,7 @@ export const OrthancViewer: React.FC<OrthancViewerProps> = ({
   const currentImage = images[currentIndex];
 
   /**
-   * Display an image on the canvas
+   * Display an image on the canvas and show study description if available
    */
   const displayImage = useCallback((image: OrthancImage | null) => {
     const canvas = canvasRef.current;
@@ -261,7 +261,6 @@ export const OrthancViewer: React.FC<OrthancViewerProps> = ({
       {/* Canvas for displaying images */}
       <div className={styles.canvasContainer}>
         <canvas ref={canvasRef} className={styles.canvas} />
-
         {!localImagePreview && images.length === 0 && !loading && (
           <div className={styles.emptyState}>
             <p>No images available. Upload an image to get started.</p>
