@@ -461,6 +461,7 @@ describe('OrthancViewer', () => {
         uploadImage: mockUploadImage,
         fetchPatientImages: mockFetchPatientImages,
         fetchInstanceById: jest.fn(),
+        deleteImage: jest.fn().mockResolvedValue(true),
         loading: false,
         error: new Error('Upload failed'),
       });
