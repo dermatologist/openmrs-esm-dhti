@@ -162,23 +162,31 @@ describe('OrthancViewer', () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByText('1 / 2')).toBeInTheDocument();
+        // Initial state: newest image (2/2)
+        expect(screen.getByText((content, node) => {
+          const text = node?.textContent?.replace(/\s+/g, '');
+          return text === '2/2';
+        })).toBeInTheDocument();
       });
 
-      // Click next button
-      const nextButton = screen.getByRole('button', { name: /next/i });
-      fireEvent.click(nextButton);
-
-      await waitFor(() => {
-        expect(screen.getByText('2 / 2')).toBeInTheDocument();
-      });
-
-      // Click previous button
-      const prevButton = screen.getByRole('button', { name: /previous/i });
+      const prevButton = screen.getByLabelText('Previous');
       fireEvent.click(prevButton);
 
       await waitFor(() => {
-        expect(screen.getByText('1 / 2')).toBeInTheDocument();
+        expect(screen.getByText((content, node) => {
+          const text = node?.textContent?.replace(/\s+/g, '');
+          return text === '1/2';
+        })).toBeInTheDocument();
+      });
+
+      const nextButton = screen.getByLabelText('Next');
+      fireEvent.click(nextButton);
+
+      await waitFor(() => {
+        expect(screen.getByText((content, node) => {
+          const text = node?.textContent?.replace(/\s+/g, '');
+          return text === '2/2';
+        })).toBeInTheDocument();
       });
     });
   });
