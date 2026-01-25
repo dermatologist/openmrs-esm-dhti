@@ -8,7 +8,7 @@
 
 ## About
 
-This is a monorepo for [DHTI](https://github.com/dermatologist/dhti) conches (OpenMRS ESM microfrontends) for communicating with [DHTI](https://github.com/dermatologist/dhti) elixirs (Langserve apps for healthcare), providing context and displaying results within [OpenMRS EMR](https://openmrs.org/). *However, [DHTI](https://github.com/dermatologist/dhti) elixirs can be tested with any FHIR and CDS Hooks compatible EHR system.*
+This is a monorepo for [DHTI](https://github.com/dermatologist/dhti) conches (OpenMRS ESM microfrontends) for communicating with [DHTI](https://github.com/dermatologist/dhti) elixirs (Langserve apps for healthcare), providing context and displaying results within [OpenMRS EMR](https://openmrs.org/). DHTI elixirs can also be tested with any FHIR and CDS Hooks compatible EHR system.
 
 [DHTI](https://github.com/dermatologist/dhti) provides command-line tools (`dhti-cli`) for installation and management of DHTI elixirs and conches using docker containers. [DHTI](https://github.com/dermatologist/dhti) [Vidhis](https://github.com/dermatologist/dhti/blob/develop/vidhi/README.md) (receipes) provides a set of shell commands that you can used to easily spin up a complete DHTI environment with elixirs and conches supporting modules such as the *Chatbot Agent (with patient chart context), RAG, Imaging Report widget, Orthanc DICOM viewer,* and more. Additionally, there is a browser extension that allows you to capture webpage content and send it to the DHTI elixir.
 
