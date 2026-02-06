@@ -1,6 +1,6 @@
 # OS files
 .DS_Store
-
+.agents/backup/*
 # Logs
 logs
 *.log
