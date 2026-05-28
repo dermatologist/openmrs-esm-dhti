@@ -95,7 +95,7 @@
     "react-router-dom": "^6.14.1",
     "rxjs": "^6.6.7",
     "swc-loader": "^0.2.3",
-    "turbo": "^2.5.2",
+    "turbo": "^2.9.14",
     "typescript": "^5.0.0",
     "webpack": "^5.99.9",
     "webpack-cli": "^6.0.1"
