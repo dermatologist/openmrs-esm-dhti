@@ -3525,7 +3525,7 @@ __metadata:
     react-router-dom: "npm:^6.14.1"
     rxjs: "npm:^6.6.7"
     swc-loader: "npm:^0.2.3"
-    turbo: "npm:^2.5.2"
+    turbo: "npm:^2.9.14"
     typescript: "npm:^5.0.0"
     webpack: "npm:^5.99.9"
     webpack-cli: "npm:^6.0.1"
@@ -3589,7 +3589,7 @@ __metadata:
     react-router-dom: "npm:^6.14.1"
     rxjs: "npm:^6.6.7"
     swc-loader: "npm:^0.2.3"
-    turbo: "npm:^2.5.2"
+    turbo: "npm:^2.9.14"
     typescript: "npm:^5.0.0"
     webpack: "npm:^5.99.9"
     webpack-cli: "npm:^6.0.1"
@@ -3652,7 +3652,7 @@ __metadata:
     react-router-dom: "npm:^6.14.1"
     rxjs: "npm:^6.6.7"
     swc-loader: "npm:^0.2.3"
-    turbo: "npm:^2.5.2"
+    turbo: "npm:^2.9.14"
     typescript: "npm:^5.0.0"
     webpack: "npm:^5.99.9"
     webpack-cli: "npm:^6.0.1"
@@ -3715,7 +3715,7 @@ __metadata:
     react-router-dom: "npm:^6.14.1"
     rxjs: "npm:^6.6.7"
     swc-loader: "npm:^0.2.3"
-    turbo: "npm:^2.5.2"
+    turbo: "npm:^2.9.14"
     typescript: "npm:^5.0.0"
     webpack: "npm:^5.99.9"
     webpack-cli: "npm:^6.0.1"
@@ -3809,7 +3809,7 @@ __metadata:
     react-router-dom: "npm:^6.14.1"
     rxjs: "npm:^6.6.7"
     swc-loader: "npm:^0.2.3"
-    turbo: "npm:^2.5.2"
+    turbo: "npm:^2.9.14"
     typescript: "npm:^5.0.0"
     webpack: "npm:^5.99.9"
     webpack-cli: "npm:^6.0.1"
@@ -3994,7 +3994,7 @@ __metadata:
     react-router-dom: "npm:^6.14.1"
     rxjs: "npm:^6.6.7"
     swc-loader: "npm:^0.2.3"
-    turbo: "npm:^2.5.2"
+    turbo: "npm:^2.9.14"
     typescript: "npm:^5.0.0"
     webpack: "npm:^5.99.9"
     webpack-cli: "npm:^6.0.1"
@@ -4177,7 +4177,7 @@ __metadata:
     react-router-dom: "npm:^6.14.1"
     rxjs: "npm:^6.6.7"
     swc-loader: "npm:^0.2.3"
-    turbo: "npm:^2.5.2"
+    turbo: "npm:^2.9.14"
     typescript: "npm:^5.0.0"
     webpack: "npm:^5.99.9"
     webpack-cli: "npm:^6.0.1"
@@ -6762,6 +6762,48 @@ __metadata:
     "@tufjs/canonical-json": "npm:1.0.0"
     minimatch: "npm:^9.0.0"
   checksum: 10/2c63e9cfc04a4ce8888e9cc9668a7207e3047d64c50dccc3d2c30057d8bd6c4e89256b6094d2109549278da72c75e20cd8717bb5f4b544dc2323288a2a96607f
+  languageName: node
+  linkType: hard
+
+"@turbo/darwin-64@npm:2.9.14":
+  version: 2.9.14
+  resolution: "@turbo/darwin-64@npm:2.9.14"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@turbo/darwin-arm64@npm:2.9.14":
+  version: 2.9.14
+  resolution: "@turbo/darwin-arm64@npm:2.9.14"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@turbo/linux-64@npm:2.9.14":
+  version: 2.9.14
+  resolution: "@turbo/linux-64@npm:2.9.14"
+  conditions: os=linux & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@turbo/linux-arm64@npm:2.9.14":
+  version: 2.9.14
+  resolution: "@turbo/linux-arm64@npm:2.9.14"
+  conditions: os=linux & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@turbo/windows-64@npm:2.9.14":
+  version: 2.9.14
+  resolution: "@turbo/windows-64@npm:2.9.14"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@turbo/windows-arm64@npm:2.9.14":
+  version: 2.9.14
+  resolution: "@turbo/windows-arm64@npm:2.9.14"
+  conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
@@ -19810,74 +19852,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"turbo-darwin-64@npm:2.7.4":
-  version: 2.7.4
-  resolution: "turbo-darwin-64@npm:2.7.4"
-  conditions: os=darwin & cpu=x64
-  languageName: node
-  linkType: hard
-
-"turbo-darwin-arm64@npm:2.7.4":
-  version: 2.7.4
-  resolution: "turbo-darwin-arm64@npm:2.7.4"
-  conditions: os=darwin & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"turbo-linux-64@npm:2.7.4":
-  version: 2.7.4
-  resolution: "turbo-linux-64@npm:2.7.4"
-  conditions: os=linux & cpu=x64
-  languageName: node
-  linkType: hard
-
-"turbo-linux-arm64@npm:2.7.4":
-  version: 2.7.4
-  resolution: "turbo-linux-arm64@npm:2.7.4"
-  conditions: os=linux & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"turbo-windows-64@npm:2.7.4":
-  version: 2.7.4
-  resolution: "turbo-windows-64@npm:2.7.4"
-  conditions: os=win32 & cpu=x64
-  languageName: node
-  linkType: hard
-
-"turbo-windows-arm64@npm:2.7.4":
-  version: 2.7.4
-  resolution: "turbo-windows-arm64@npm:2.7.4"
-  conditions: os=win32 & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"turbo@npm:^2.5.2":
-  version: 2.7.4
-  resolution: "turbo@npm:2.7.4"
+"turbo@npm:^2.9.14":
+  version: 2.9.14
+  resolution: "turbo@npm:2.9.14"
   dependencies:
-    turbo-darwin-64: "npm:2.7.4"
-    turbo-darwin-arm64: "npm:2.7.4"
-    turbo-linux-64: "npm:2.7.4"
-    turbo-linux-arm64: "npm:2.7.4"
-    turbo-windows-64: "npm:2.7.4"
-    turbo-windows-arm64: "npm:2.7.4"
+    "@turbo/darwin-64": "npm:2.9.14"
+    "@turbo/darwin-arm64": "npm:2.9.14"
+    "@turbo/linux-64": "npm:2.9.14"
+    "@turbo/linux-arm64": "npm:2.9.14"
+    "@turbo/windows-64": "npm:2.9.14"
+    "@turbo/windows-arm64": "npm:2.9.14"
   dependenciesMeta:
-    turbo-darwin-64:
+    "@turbo/darwin-64":
       optional: true
-    turbo-darwin-arm64:
+    "@turbo/darwin-arm64":
       optional: true
-    turbo-linux-64:
+    "@turbo/linux-64":
       optional: true
-    turbo-linux-arm64:
+    "@turbo/linux-arm64":
       optional: true
-    turbo-windows-64:
+    "@turbo/windows-64":
       optional: true
-    turbo-windows-arm64:
+    "@turbo/windows-arm64":
       optional: true
   bin:
     turbo: bin/turbo
-  checksum: 10/fbb901da0f576aadac57168f365913b8cd07fd22874c4bfedc736bcd18a5888c2897882e03d87ba451b2dcd21b376a44b0245622260b08bc1bbc36f70345a19b
+  checksum: 10/99ce1f10c79ec840b542cc628d44f6febc18fcff8fed08f7f966a983a71b03c7febcf3e16066667a01f9d8d7faca133ebd541c57555bd509364f669ceb46807f
   languageName: node
   linkType: hard
 
